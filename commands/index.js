@@ -3,5 +3,6 @@ module.exports = {
     kick: require('./kick'),
     ban: require('./ban'),
     mute: require('./mute'),
-    unmute: require('./unmute')
+    unmute: require('./unmute'),
+    dm: require('./dm')
 }

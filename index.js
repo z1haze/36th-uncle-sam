@@ -23,8 +23,6 @@ bot.on('message', msg => {
     const args = msg.content.split(/ +/);
     const command = args.shift().toLowerCase();
 
-    console.log(`Called command: ${command}`);
-
     if (!bot.commands.has(command)) {
         return;
     }
