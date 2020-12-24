@@ -2,7 +2,10 @@ require('dotenv').config();
 
 const Discord = require('discord.js');
 
-const bot = new Discord.Client();
+const bot = new Discord.Client({
+    fetchAllMembers: false
+});
+
 bot.commands = new Discord.Collection();
 
 const commands = require('./commands');
