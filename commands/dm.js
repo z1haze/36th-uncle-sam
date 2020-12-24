@@ -1,7 +1,7 @@
 module.exports = {
-    name: '~dm',
+    name       : '~dm',
     description: 'DM Roles/Members!',
-    async execute(msg) {
+    async execute (msg) {
         const dmChannels = process.env.DM_BOT_CHANNELS.split(',');
 
         if ((msg.mentions.roles.size || msg.mentions.users.size) && dmChannels.indexOf(msg.channel.id) > -1) {
@@ -15,7 +15,7 @@ module.exports = {
             msg.mentions.roles.forEach((role) => {
                 role.members.forEach((member) => {
                     members.add(member);
-                })
+                });
             });
 
             // deliver messages to each member
@@ -24,4 +24,4 @@ module.exports = {
             }
         }
     },
-}
+};
