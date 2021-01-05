@@ -1,50 +1,25 @@
 require('dotenv').config();
 
+const path = require('path');
 const Discord = require('discord.js');
-
-const bot = new Discord.Client();
-
-bot.commands = new Discord.Collection();
-
-const commands = require('./commands');
-
-for (const key in commands) {
-    bot.commands.set(commands[key].name, commands[key]);
-}
+const {initCommands} = require('./util/commands');
+const {initRoleReactions} = require('./util/reactions');
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
+const client = new Discord.Client();
 
-bot.login(BOT_TOKEN);
+client.on('ready', async () => {
+    // eslint-disable-next-line no-console
+    console.info(`Logged in as ${client.user.tag}!`);
 
-bot.on('ready', () => {
-    console.info(`Logged in as ${bot.user.tag}!`);
+    // setup commands
+    initCommands(client, path.resolve('./commands'))
+        .then(() => console.log('Commands initialized')); // eslint-disable-line no-console
+
+    // init role bot actions
+    initRoleReactions(client)
+        .then(() => console.log('Reactions initialized')); // eslint-disable-line no-console
+
 });
 
-// listen for commands
-bot.on('message', msg => {
-    const args = msg.content.split(/ +/);
-    const command = args.shift().toLowerCase();
-
-    if (!bot.commands.has(command)) {
-        return;
-    }
-
-    try {
-        bot.commands.get(command).execute(msg, args);
-    } catch (err) {
-        console.error(err);
-        msg.reply('There was an error executing the command');
-    }
-});
-
-bot.on('messageReactionAdd', () => {
-    console.log('messageReactionAdd');
-});
-
-// raw event listeners
-bot.on('raw', (event) => {
-    if (event.t === 'MESSAGE_REACTION_ADD' || event.t === 'MESSAGE_REACTION_REMOVE' ) {
-        console.log(event);
-    }
-});
-
+client.login(BOT_TOKEN);

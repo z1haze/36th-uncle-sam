@@ -1,18 +1,22 @@
 module.exports = {
-    name       : '~dm',
-    description: 'DM Roles/Members!',
-    async execute (msg) {
+    commands    : ['dm'],
+    expectedArgs: '<role1> <role2> ... -- attention users, this is a test',
+    minArgs     : 2,
+    callback    : (message, args, text) => {
         const dmChannels = process.env.DM_BOT_CHANNELS.split(',');
 
-        if ((msg.mentions.roles.size || msg.mentions.users.size) && dmChannels.indexOf(msg.channel.id) > -1) {
-            const message = msg.content.split('--').pop();
+        if (
+            (message.mentions.roles.size || message.mentions.users.size) &&
+            dmChannels.indexOf(message.channel.id) > -1
+        ) {
+            const content = message.content.split('--').pop();
             const members = new Set();
 
             // add each user which was mentioned
-            msg.mentions.users.forEach((user) => members.add(msg.guild.members.cache.get(user.id)));
+            message.mentions.users.forEach((user) => members.add(message.guild.members.cache.get(user.id)));
 
             // add each user from each role that was mentioned
-            msg.mentions.roles.forEach((role) => {
+            message.mentions.roles.forEach((role) => {
                 role.members.forEach((member) => {
                     members.add(member);
                 });
@@ -20,8 +24,10 @@ module.exports = {
 
             // deliver messages to each member
             for (const member of members) {
-                member.send(message);
+                member.send(content);
             }
+        } else {
+            message.reply('DM Bot does not have access to this channel');
         }
-    },
+    }
 };
