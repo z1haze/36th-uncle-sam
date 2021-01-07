@@ -129,14 +129,14 @@ const handleUserReaction = async (client, event) => {
  * @param message
  * @returns {Promise<void>}
  */
-const processMessage = async (client, message) => {
+const processMessage = (client, message) => {
     const {lines, remove} = translateMessage(message);
 
     // add reactions based on the message content
     for (const line of lines) {
         const [, emoji] = line;
 
-        await message.react(emoji);
+        message.react(emoji);
     }
 
     // remove any reactions that should not be
@@ -146,8 +146,8 @@ const processMessage = async (client, message) => {
             for (const [emoji, role] of remove) {
                 if (reaction.emoji.name === emoji) {
                     for (const [id] of reaction.users.cache) {
-                        await takeRole(message.guild, {id}, role.name);
-                        await reaction.remove();
+                        takeRole(message.guild, {id}, role.name);
+                        reaction.remove();
                     }
 
                     break loop;
@@ -178,14 +178,14 @@ const initRoleReactions = async function (client) {
         }
 
         for (const [, message] of await channel.messages.fetch()) {
-            await processMessage(client, message);
+            processMessage(client, message);
         }
     }
 
     client.on('raw', async (event) => {
         if (event.t === 'MESSAGE_REACTION_ADD' || event.t === 'MESSAGE_REACTION_REMOVE' ) {
             if (process.env.ROLE_BOT_CHANNELS.indexOf(event.d.channel_id) > -1) {
-                await handleUserReaction(client, event);
+                handleUserReaction(client, event);
             }
 
             return;
@@ -194,7 +194,7 @@ const initRoleReactions = async function (client) {
         if (event.t === 'MESSAGE_CREATE' || event.t === 'MESSAGE_UPDATE') {
             const {message} = await getStandardData(client, event);
 
-            await processMessage(client, message);
+            processMessage(client, message);
         }
     });
 };

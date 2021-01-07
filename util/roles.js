@@ -44,10 +44,10 @@ const giveRole = async (guild, user, roleName) => {
         const memberHasDividerRole = !!member.roles.cache.get(dividerRole.id);
 
         if (!memberHasDividerRole) {
-            await member.roles.add(dividerRole);
+            member.roles.add(dividerRole);
         }
 
-        await member.roles.add(role);
+        member.roles.add(role);
     }
 };
 
@@ -99,7 +99,7 @@ const takeRole = async (guild, user, roleName) => {
         const dividerRole = getDividerRole(guild, role);
 
         if (!memberDividerRoles.get(dividerRole.id)) {
-            await member.roles.remove(dividerRole);
+            member.roles.remove(dividerRole);
         }
     }
 };

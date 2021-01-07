@@ -81,16 +81,16 @@ const strToArr = (str) => {
 };
 
 module.exports = (client, opts) => {
-    let {
-        commands,
+    const {
         expectedArgs = '',
         permissionError = 'You do not have permission to run this command.',
         minArgs = 0,
         maxArgs = null,
-        permissions = [],
         requiredRoles = [],
         callback
     } = opts;
+
+    let {commands, requiredPermissions = []} = opts;
 
     // convert commands to array
     if (typeof commands === 'string') {
@@ -101,12 +101,12 @@ module.exports = (client, opts) => {
     console.log(`Registering command: "${commands[0]}"`);
 
     // validate permissions
-    if (permissions.length) {
-        if (typeof permissions === 'string') {
-            permissions = strToArr(permissions);
+    if (requiredPermissions.length) {
+        if (typeof requiredPermissions === 'string') {
+            requiredPermissions = strToArr(requiredPermissions);
         }
 
-        validatePermissions(permissions);
+        validatePermissions(requiredPermissions);
     }
 
     // command listener
@@ -118,7 +118,7 @@ module.exports = (client, opts) => {
                 // command runs
 
                 // checks user has permission
-                for (const permission of permissions) {
+                for (const permission of requiredPermissions) {
                     if (!member.hasPermission(permission)) {
                         return message.reply(permissionError);
                     }
@@ -134,7 +134,7 @@ module.exports = (client, opts) => {
                 }
 
                 // pull the args from the raw command
-                const args = content.split(/[\s]+/);
+                const args = content.split(/[ ]+/);
 
                 // drop the command itself
                 args.shift();
