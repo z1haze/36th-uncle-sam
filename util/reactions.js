@@ -176,6 +176,7 @@ const initRoleReactions = function (client, commands) {
             .then((messages) => {
                 for (const [, message] of messages) {
                     processMessage(message);
+                    // message.reactions.removeAll();
                 }
             });
     }
@@ -236,7 +237,9 @@ const initRoleReactions = function (client, commands) {
             const channel = guild.channels.cache.get(event.d.channel_id);
             const message = await channel.messages.fetch(event.d.message_id);
 
-            handleUserReaction(guild, member.user, message, event.d.emoji, eventType === 'MESSAGE_REACTION_REMOVE');
+            if (!member.user.bot) {
+                handleUserReaction(guild, member.user, message, event.d.emoji, eventType === 'MESSAGE_REACTION_REMOVE');
+            }
         }
     });
 };
