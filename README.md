@@ -8,7 +8,12 @@ Uncle Sam Bot
 What It Does
 ---
 
+- [x] Role Assignment Messages (emoji/role selection)
 - [x] DM Users/Roles
+- [x] Send messages Bot
+- [x] Edit Bot Messages
+- [x] Request Bot DM message content to you
+- [x] Image attachment via URL
 
 Usage Overview
 ---
@@ -36,6 +41,7 @@ To access a channel, __react to this post__ with the corresponding emoji
 * [`~echo`](docs/commands/echo.md) - Send messages via the bot
 * [`~image`](docs/commands/echo.md) - Send image attachments via the bot
 * [`~dump`](docs/commands/dump.md) - DM the sender with the content of a message
+* [`~edit`](docs/commands/edit.md) - Edit a bot message with new content
 * `~ping` - Check if bot is online
 
 #### Configuration
