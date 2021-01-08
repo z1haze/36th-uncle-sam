@@ -5,9 +5,14 @@ module.exports = {
     initCommands: (client, commandsPath) => {
         const baseFile = 'base.js';
         const baseCommand = require(path.resolve(commandsPath, baseFile));
+        const commands = new Set();
 
         const readCommands = (dir) => {
             const files = fs.readdirSync(dir);
+
+            files.forEach((file) => {
+                commands.add(file.substr(0, file.lastIndexOf('.')));
+            });
 
             for (const file of files) {
                 const stat = fs.lstatSync(path.join(dir, file));
@@ -25,6 +30,8 @@ module.exports = {
         // setup all commands
         readCommands(commandsPath);
 
-        return Promise.resolve();
+        commands.delete('base');
+
+        return commands;
     }
 };

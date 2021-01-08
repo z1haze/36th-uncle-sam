@@ -33,6 +33,9 @@ To access a channel, __react to this post__ with the corresponding emoji
 #### Commands
 
 * [`~dm`](docs/commands/dm.md) - Send DM's to users and/or roles
+* [`~echo`](docs/commands/echo.md) - Send messages via the bot
+* [`~image`](docs/commands/echo.md) - Send image attachments via the bot
+* [`~dump`](docs/commands/dump.md) - DM the sender with the content of a message
 * `~ping` - Check if bot is online
 
 #### Configuration

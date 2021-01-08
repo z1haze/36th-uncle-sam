@@ -7,40 +7,40 @@ const {giveRole, takeRole} = require('./roles');
  * @param event
  * @returns {Promise<{guild: Holds, channel: *, message: *}>}
  */
-const getStandardData = async (client, event) => {
-    // get the guild from which the event originated
-    const guild = client.guilds.cache.get(event.d.guild_id);
-
-    // get the channel from build the message originated
-    const channel = guild.channels.cache.get(event.d.channel_id);
-
-    let messageId;
-
-    switch (event.t) {
-        case 'MESSAGE_CREATE':
-        case 'MESSAGE_UPDATE':
-            messageId = event.d.id;
-            break;
-        default:
-            messageId = event.d.message_id;
-    }
-
-    // pull the message that was reacted to
-    const message = await channel.messages.fetch(messageId);
-
-    return {
-        guild,
-        channel,
-        message
-    };
-};
+// const getStandardData = async (client, event) => {
+//     // get the guild from which the event originated
+//     const guild = client.guilds.cache.get(event.d.guild_id);
+//
+//     // get the channel from build the message originated
+//     const channel = guild.channels.cache.get(event.d.channel_id);
+//
+//     let messageId;
+//
+//     switch (event.t) {
+//         case 'MESSAGE_CREATE':
+//         case 'MESSAGE_UPDATE':
+//             messageId = event.d.id;
+//             break;
+//         default:
+//             messageId = event.d.message_id;
+//     }
+//
+//     // pull the message that was reacted to
+//     const message = await channel.messages.fetch(messageId);
+//
+//     return {
+//         guild,
+//         channel,
+//         message
+//     };
+// };
 
 /**
  * Parses a single message line for an emoji/role pair
  *
- * @param line
- * @param message
- * @returns {[*, *]}
+ * @param line {RegExpMatchArray}
+ * @param message {Message}
+ * @returns {[String, Role]}
  */
 const translateLine = (line, message) => {
     let currentEmoji = line[1];
@@ -61,34 +61,37 @@ const translateLine = (line, message) => {
 };
 
 /**
- * Parses a message
+ * Parse a message and extract emoji/role sets
  *
- * @param message into translated lines of emoji/role, as well
- * as a map containing an emoji/role pairs that need to be removed
- * after an edit was made
- *
- * @returns {{}}
+ * @param message {Message}
+ * @param oldMessage
+ * @returns {{toRemove: Set<String>, translations: Map<String, Role>, lines: IterableIterator<RegExpMatchArray>}}
  */
-const translateMessage = (message) => {
+const translateMessage = (message, oldMessage) => {
     const lines = [...message.content.matchAll(/>* *([^ \n]+) [^\n]*-[^\n]*<@&([0-9]+)>/g)];
     const translations = new Map();
-    const remove = new Map();
+    const toRemove = new Set();
 
-    // add emoji/role translations for the current message
+    /**
+     * Find emoji/role pairs for each line in the message
+     */
     for (const line of lines) {
         const [currentEmoji, role] = translateLine(line, message);
+
         translations.set(currentEmoji, role);
     }
 
-    // track previously edited message for dropped emoji/role pairs so we can un-assign them from users
-    if (message.edits.length > 1) {
-        const lines = [...message.edits[1].content.matchAll(/>* *([^ \n]+) [^\n]*-[^\n]*<@&([0-9]+)>/g)];
+    /**
+     * Check the previous message (if edited) and keep track of any emoji/roles that were removed
+     */
+    if (oldMessage) {
+        const lines = oldMessage.content.matchAll(/>* *([^ \n]+) [^\n]*-[^\n]*<@&([0-9]+)>/g);
 
         for (const line of lines) {
-            const [currentEmoji, role] = translateLine(line, message);
+            const [currentEmoji] = translateLine(line, message);
 
             if (!translations.has(currentEmoji)) {
-                remove.set(currentEmoji, role);
+                toRemove.add(currentEmoji);
             }
         }
     }
@@ -96,29 +99,29 @@ const translateMessage = (message) => {
     return {
         lines,
         translations,
-        remove
+        toRemove
     };
 };
 
 /**
  * Handle user reaction event for role bot actions
  *
- * @param client
- * @param event
- * @returns {Promise<void>}
+ * @param guild
+ * @param user
+ * @param message
+ * @param emoji
+ * @param remove
  */
-const handleUserReaction = async (client, event) => {
-    const {guild, message} = await getStandardData(client, event);
-    const emoji = event.d.emoji.name;
+const handleUserReaction = (guild, user, message, emoji, remove = false) => {
     const {translations} = translateMessage(message);
 
-    if (translations.has(emoji)) {
-        const role = translations.get(emoji);
+    if (translations.has(emoji.name)) {
+        const role = translations.get(emoji.name);
 
-        if (event.t === 'MESSAGE_REACTION_ADD') {
-            await giveRole(guild, {id: event.d.user_id}, role.name);
-        } else if (event.t === 'MESSAGE_REACTION_REMOVE') {
-            await takeRole(guild, {id: event.d.user_id}, role.name);
+        if (remove) {
+            takeRole(guild, user, role.name);
+        } else {
+            giveRole(guild, user, role.name);
         }
     }
 };
@@ -126,50 +129,42 @@ const handleUserReaction = async (client, event) => {
 /**
  * Processes a message to setup with correct emojis
  *
- * @param message
- * @returns {Promise<void>}
+ * @param message {Message} the message object
+ * @param oldMessage {Message} optional message object passed during edit message
  */
-const processMessage = (client, message) => {
-    const {lines, remove} = translateMessage(message);
+const processMessage = (message, oldMessage = null) => {
+    const {lines, toRemove} = translateMessage(message, oldMessage);
 
     // add reactions based on the message content
     for (const line of lines) {
         const [, emoji] = line;
 
-        message.react(emoji);
+        message.react(emoji)
+            .catch((e) => console.error(e.message)); // eslint-disable-line no-console
     }
 
     // remove any reactions that should not be
-    if (remove && remove.size) {
+    if (toRemove.size > 0) {
         for (const [, reaction] of message.reactions.cache) {
-            loop:
-            for (const [emoji, role] of remove) {
-                if (reaction.emoji.name === emoji) {
-                    for (const [id] of reaction.users.cache) {
-                        takeRole(message.guild, {id}, role.name);
-                        reaction.remove();
-                    }
-
-                    break loop;
-                }
+            if (toRemove.has(reaction.emoji.name)) {
+                reaction.remove()
+                    .catch((e) => console.error(e.message)); // eslint-disable-line no-console
             }
         }
     }
-
-    // TODO: test code remove
-    // await message.reactions.removeAll();
 };
 
 /**
  * Initialize the bot for role assignment functionality
  *
  * @param client
- * @returns {Promise<void>}
  */
-const initRoleReactions = async function (client) {
+const initRoleReactions = function (client, commands) {
     const ROLE_BOT_CHANNELS = process.env.ROLE_BOT_CHANNELS.split(',');
 
-    // loop through each role channel and init reactions on each message
+    /**
+     * Setup bot for ROLE Selection channels
+     */
     for (const id of ROLE_BOT_CHANNELS) {
         const channel = client.channels.cache.get(id);
 
@@ -177,24 +172,71 @@ const initRoleReactions = async function (client) {
             throw new Error(`Channel not found matching id: ${id}`);
         }
 
-        for (const [, message] of await channel.messages.fetch()) {
-            processMessage(client, message);
-        }
+        channel.messages.fetch()
+            .then((messages) => {
+                for (const [, message] of messages) {
+                    processMessage(message);
+                }
+            });
     }
 
-    client.on('raw', async (event) => {
-        if (event.t === 'MESSAGE_REACTION_ADD' || event.t === 'MESSAGE_REACTION_REMOVE' ) {
-            if (process.env.ROLE_BOT_CHANNELS.indexOf(event.d.channel_id) > -1) {
-                handleUserReaction(client, event);
-            }
-
+    /**
+     * Handle new messages
+     */
+    client.on('message', (message) => {
+        if (!message.guild) {
             return;
         }
 
-        if (event.t === 'MESSAGE_CREATE' || event.t === 'MESSAGE_UPDATE') {
-            const {message} = await getStandardData(client, event);
+        const firstArg = message.content.substr(1, message.content.indexOf(' ') - 1);
 
-            processMessage(client, message);
+        // if the message is a command, we do not handle it here
+        if (commands.has(firstArg)) {
+            return;
+        }
+
+        if (process.env.ROLE_BOT_CHANNELS.indexOf(message.channel.id) > -1) {
+            processMessage(message);
+        }
+    });
+
+    /**
+     * Handle message updates
+     */
+    client.on('messageUpdate', (oldMessage, newMessage) => {
+        if (!newMessage.guild) {
+            return;
+        }
+
+        if (process.env.ROLE_BOT_CHANNELS.indexOf(newMessage.channel.id) > -1) {
+            processMessage(newMessage, oldMessage);
+        }
+    });
+
+    /**
+     * messageReactionAdd and messageReactionRemove only fire on cached messages,
+     * so we use the raw event
+     */
+    client.on('raw', async (event) => {
+        const eventType = event.t;
+
+        if (eventType === 'MESSAGE_REACTION_ADD' || eventType === 'MESSAGE_REACTION_REMOVE') {
+            // without a guild id we do nothing
+            if (!event.d.guild_id) {
+                return;
+            }
+
+            // ensure the event is firing from the appropriate channel
+            if (process.env.ROLE_BOT_CHANNELS.indexOf(event.d.channel_id) === -1) {
+                return;
+            }
+
+            const guild = client.guilds.cache.get(event.d.guild_id);
+            const member = guild.members.cache.get(event.d.user_id);
+            const channel = guild.channels.cache.get(event.d.channel_id);
+            const message = await channel.messages.fetch(event.d.message_id);
+
+            handleUserReaction(guild, member.user, message, event.d.emoji, eventType === 'MESSAGE_REACTION_REMOVE');
         }
     });
 };

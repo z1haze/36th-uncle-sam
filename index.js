@@ -13,13 +13,16 @@ client.on('ready', async () => {
     console.info(`Logged in as ${client.user.tag}!`);
 
     // setup commands
-    initCommands(client, path.resolve('./commands'))
-        .then(() => console.log('Commands initialized')); // eslint-disable-line no-console
+    const commands = initCommands(client, path.resolve('./commands'));
+
+    // eslint-disable-next-line no-console
+    console.log('Commands initialized');
 
     // init role bot actions
-    initRoleReactions(client)
-        .then(() => console.log('Reactions initialized')); // eslint-disable-line no-console
+    initRoleReactions(client, commands);
 
+    // eslint-disable-next-line no-console
+    console.log('Reactions initialized');
 });
 
 client.login(BOT_TOKEN);

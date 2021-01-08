@@ -1,13 +1,10 @@
 module.exports = {
     commands           : ['echo'],
-    expectedArgs       : '',
-    minArgs            : 0,
+    expectedArgs       : '<content>',
+    minArgs            : 1,
     requiredPermissions: ['ADMINISTRATOR'],
     callback           : (message, args, text) => {
-        if (text.length) {
-            message.channel.send(text);
-        }
-
+        message.channel.send(text);
         message.delete();
     }
 };
