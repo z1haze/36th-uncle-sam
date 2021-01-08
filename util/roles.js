@@ -83,15 +83,13 @@ const getMemberDividerRoles = (guild, member, ignore = []) => {
  * Remove a role from a member
  *
  * @param guild
- * @param user
+ * @param member
  * @param roleName
  */
-const takeRole = (guild, user, roleName) => {
+const takeRole = (guild, member, roleName) => {
     const role = guild.roles.cache.find((role) => role.name === roleName);
 
     if (role) {
-        const member = guild.members.cache.get(user.id);
-
         member.roles.remove(role)
             .then(() => {
                 const memberDividerRoles = getMemberDividerRoles(guild, member, [role]);

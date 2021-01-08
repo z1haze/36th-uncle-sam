@@ -1,4 +1,5 @@
 const {giveRole, takeRole} = require('./roles');
+const {getEventData} = require('./events');
 
 /**
  * Utility method to fetch generic data that is used in multiple methods
@@ -103,25 +104,59 @@ const translateMessage = (message, oldMessage) => {
     };
 };
 
+const handleWelcomeReaction = async (guild, channel, member, remove) => {
+    const welcomeChannels = process.env.WELCOME_CHANNELS.split(',');
+    const step = welcomeChannels.indexOf(channel.id);
+
+    const nextRole = guild.roles.cache.find((role) => role.name === `New-${step + 1}`);
+    const prevRole = guild.roles.cache.find((role) => role.name === `New-${step}`);
+
+    if (step === 0 && remove) {
+        const rolesToRemove = guild.roles.cache.filter((role) => role.name.startsWith('New-'));
+        rolesToRemove.each((role) => member.roles.remove(role));
+
+        return;
+    }
+
+    if (remove) {
+        if (nextRole) {
+            member.roles.remove(nextRole);
+        }
+
+        member.roles.add(prevRole);
+    } else {
+        if (prevRole) {
+            member.roles.remove(prevRole);
+        }
+
+        if (nextRole) {
+            member.roles.add(nextRole);
+        } else {
+            const guestRole = guild.roles.cache.get(process.env.GUEST_ROLE);
+            member.roles.add(guestRole);
+        }
+    }
+};
+
 /**
  * Handle user reaction event for role bot actions
  *
  * @param guild
- * @param user
+ * @param member
  * @param message
  * @param emoji
  * @param remove
  */
-const handleUserReaction = (guild, user, message, emoji, remove = false) => {
+const handleUserReaction = (guild, member, message, emoji, remove = false) => {
     const {translations} = translateMessage(message);
 
     if (translations.has(emoji.name)) {
         const role = translations.get(emoji.name);
 
         if (remove) {
-            takeRole(guild, user, role.name);
+            takeRole(guild, member, role.name);
         } else {
-            giveRole(guild, user, role.name);
+            giveRole(guild, member, role.name);
         }
     }
 };
@@ -158,9 +193,11 @@ const processMessage = (message, oldMessage = null) => {
  * Initialize the bot for role assignment functionality
  *
  * @param client
+ * @param commands
  */
 const initRoleReactions = function (client, commands) {
     const ROLE_BOT_CHANNELS = process.env.ROLE_BOT_CHANNELS.split(',');
+    const WELCOME_CHANNELS = process.env.WELCOME_CHANNELS.split(',');
 
     /**
      * Setup bot for ROLE Selection channels
@@ -177,6 +214,26 @@ const initRoleReactions = function (client, commands) {
                 for (const [, message] of messages) {
                     processMessage(message);
                     // message.reactions.removeAll();
+                }
+            });
+    }
+
+    for (const id of WELCOME_CHANNELS) {
+        const channel = client.channels.cache.get(id);
+
+        if (!channel) {
+            throw new Error(`Channel not found matching id: ${id}`);
+        }
+
+        channel.messages.fetch()
+            .then((messages) => {
+
+                for (const [, message] of messages) {
+                    const emoji = message.guild.emojis.cache.find((emoji) => emoji.name === '36th');
+
+                    if (emoji && message.content.indexOf(emoji.id) > -1) {
+                        message.react(emoji);
+                    }
                 }
             });
     }
@@ -219,26 +276,28 @@ const initRoleReactions = function (client, commands) {
      * so we use the raw event
      */
     client.on('raw', async (event) => {
-        const eventType = event.t;
-
-        if (eventType === 'MESSAGE_REACTION_ADD' || eventType === 'MESSAGE_REACTION_REMOVE') {
+        if (event.t === 'MESSAGE_REACTION_ADD' || event.t === 'MESSAGE_REACTION_REMOVE') {
             // without a guild id we do nothing
             if (!event.d.guild_id) {
                 return;
             }
 
-            // ensure the event is firing from the appropriate channel
-            if (process.env.ROLE_BOT_CHANNELS.indexOf(event.d.channel_id) === -1) {
+            if (process.env.WELCOME_CHANNELS.indexOf(event.d.channel_id) > -1) {
+                const {guild, channel, member} = await getEventData(client,event);
+
+                handleWelcomeReaction(guild, channel, member, event.t === 'MESSAGE_REACTION_REMOVE');
+
                 return;
             }
 
-            const guild = client.guilds.cache.get(event.d.guild_id);
-            const member = guild.members.cache.get(event.d.user_id);
-            const channel = guild.channels.cache.get(event.d.channel_id);
-            const message = await channel.messages.fetch(event.d.message_id);
+            // ensure the event is firing from the appropriate channel
+            if (process.env.ROLE_BOT_CHANNELS.indexOf(event.d.channel_id) > -1) {
+                // fetch relevant information from the event
+                const {guild, member, message, emoji} = await getEventData(client, event);
 
-            if (!member.user.bot) {
-                handleUserReaction(guild, member.user, message, event.d.emoji, eventType === 'MESSAGE_REACTION_REMOVE');
+                if (!member.user.bot) {
+                    handleUserReaction(guild, member, message, emoji, event.t === 'MESSAGE_REACTION_REMOVE');
+                }
             }
         }
     });
