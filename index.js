@@ -25,4 +25,11 @@ client.on('ready', async () => {
     console.log('Reactions initialized');
 });
 
+/**
+ * Give new members the 'New-1' Role
+ */
+client.on('guildMemberAdd', (member) => {
+    member.roles.add(member.guild.roles.cache.find(role => role.name === 'New-1'));
+});
+
 client.login(BOT_TOKEN);

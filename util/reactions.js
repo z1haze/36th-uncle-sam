@@ -104,37 +104,20 @@ const translateMessage = (message, oldMessage) => {
     };
 };
 
-const handleWelcomeReaction = async (guild, channel, member, remove) => {
+const handleWelcomeReaction = async (guild, channel, member) => {
     const welcomeChannels = process.env.WELCOME_CHANNELS.split(',');
-    const step = welcomeChannels.indexOf(channel.id);
+    const step = welcomeChannels.indexOf(channel.id) + 1;
 
-    const nextRole = guild.roles.cache.find((role) => role.name === `New-${step + 1}`);
-    const prevRole = guild.roles.cache.find((role) => role.name === `New-${step}`);
+    const currentStep = guild.roles.cache.find((role) => role.name === `New-${step}`);
+    const nextStep = guild.roles.cache.find((role) => role.name === `New-${step + 1}`);
 
-    if (step === 0 && remove) {
-        const rolesToRemove = guild.roles.cache.filter((role) => role.name.startsWith('New-'));
-        rolesToRemove.each((role) => member.roles.remove(role));
+    member.roles.remove(currentStep);
 
-        return;
-    }
-
-    if (remove) {
-        if (nextRole) {
-            member.roles.remove(nextRole);
-        }
-
-        member.roles.add(prevRole);
+    if (nextStep) {
+        member.roles.add(nextStep);
     } else {
-        if (prevRole) {
-            member.roles.remove(prevRole);
-        }
-
-        if (nextRole) {
-            member.roles.add(nextRole);
-        } else {
-            const guestRole = guild.roles.cache.get(process.env.GUEST_ROLE);
-            member.roles.add(guestRole);
-        }
+        const guestRole = guild.roles.cache.get(process.env.GUEST_ROLE);
+        member.roles.add(guestRole);
     }
 };
 
@@ -285,7 +268,9 @@ const initRoleReactions = function (client, commands) {
             if (process.env.WELCOME_CHANNELS.indexOf(event.d.channel_id) > -1) {
                 const {guild, channel, member} = await getEventData(client,event);
 
-                handleWelcomeReaction(guild, channel, member, event.t === 'MESSAGE_REACTION_REMOVE');
+                if (event.t === 'MESSAGE_REACTION_ADD' && !member.user.bot) {
+                    handleWelcomeReaction(guild, channel, member);
+                }
 
                 return;
             }
