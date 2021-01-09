@@ -32,22 +32,21 @@ const getDividerRole = (guild, role) => {
  *
  * @param guild
  * @param user
- * @param roleName
+ * @param role
  */
-const giveRole = (guild, user, roleName) => {
-    const role = guild.roles.cache.find((role) => role.name === roleName);
+const giveRole = (guild, user, role) => {
+    const member = guild.members.cache.get(user.id);
+    const dividerRole = getDividerRole(guild, role);
 
-    if (role) {
-        const member = guild.members.cache.get(user.id);
-        const dividerRole = getDividerRole(guild, role);
+    if (dividerRole) {
         const memberHasDividerRole = !!member.roles.cache.get(dividerRole.id);
 
         if (!memberHasDividerRole) {
             member.roles.add(dividerRole);
         }
-
-        member.roles.add(role);
     }
+
+    member.roles.add(role);
 };
 
 /**
@@ -84,22 +83,18 @@ const getMemberDividerRoles = (guild, member, ignore = []) => {
  *
  * @param guild
  * @param member
- * @param roleName
+ * @param role
  */
-const takeRole = (guild, member, roleName) => {
-    const role = guild.roles.cache.find((role) => role.name === roleName);
+const takeRole = (guild, member, role) => {
+    member.roles.remove(role)
+        .then(() => {
+            const memberDividerRoles = getMemberDividerRoles(guild, member, [role]);
+            const dividerRole = getDividerRole(guild, role);
 
-    if (role) {
-        member.roles.remove(role)
-            .then(() => {
-                const memberDividerRoles = getMemberDividerRoles(guild, member, [role]);
-                const dividerRole = getDividerRole(guild, role);
-
-                if (!memberDividerRoles.get(dividerRole.id)) {
-                    member.roles.remove(dividerRole);
-                }
-            });
-    }
+            if (dividerRole && !memberDividerRoles.get(dividerRole.id)) {
+                member.roles.remove(dividerRole);
+            }
+        });
 };
 
 module.exports = {

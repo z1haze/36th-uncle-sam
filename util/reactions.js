@@ -137,9 +137,9 @@ const handleUserReaction = (guild, member, message, emoji, remove = false) => {
         const role = translations.get(emoji.name);
 
         if (remove) {
-            takeRole(guild, member, role.name);
+            takeRole(guild, member, role);
         } else {
-            giveRole(guild, member, role.name);
+            giveRole(guild, member, role);
         }
     }
 };
