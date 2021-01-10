@@ -37,6 +37,12 @@ To access a channel, __react to this post__ with the corresponding emoji
 > :postscriptum: #post-scriptum - @Post Scriptum
 ```
 
+#### User Welcome Flows
+This bot handles forced channel flows for new users, such as making them read through a series of gated channels
+before gaining access to the main body of the server. Welcome channels will be configured in the env file under `WELCOME_CHANNELS`.
+Roles need to be created for each welcome channel in the following format: `New-#`, for example, `New-1`, `New-2`, etc. One for each welcome channel.
+A `guest` role should be configured in the env file under `GUEST_ROLE`. This is the role that will be assigned to a user after completing all welcome channels.
+
 #### Commands
 
 * [`~clear`](docs/commands/clear.md) - Clear messages from the current channel
