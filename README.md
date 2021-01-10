@@ -8,6 +8,7 @@ Uncle Sam Bot
 What It Does
 ---
 
+- [x] Adds custom channel flow for new users, enforcing new users reaction to welcome messages and read through a series of pages
 - [x] Role Assignment Messages (emoji/role selection)
 - [x] DM Users/Roles
 - [x] Send messages Bot
