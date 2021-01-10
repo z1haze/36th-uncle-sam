@@ -14,6 +14,7 @@ What It Does
 - [x] Edit Bot Messages
 - [x] Request Bot DM message content to you
 - [x] Image attachment via URL
+- [x] Clear messages from a channel
 
 Usage Overview
 ---
@@ -37,11 +38,12 @@ To access a channel, __react to this post__ with the corresponding emoji
 
 #### Commands
 
+* [`~clear`](docs/commands/clear.md) - Clear messages from the current channel
 * [`~dm`](docs/commands/dm.md) - Send DM's to users and/or roles
-* [`~echo`](docs/commands/echo.md) - Send messages via the bot
-* [`~image`](docs/commands/echo.md) - Send image attachments via the bot
 * [`~dump`](docs/commands/dump.md) - DM the sender with the content of a message
+* [`~echo`](docs/commands/echo.md) - Send messages via the bot
 * [`~edit`](docs/commands/edit.md) - Edit a bot message with new content
+* [`~image`](docs/commands/echo.md) - Send image attachments via the bot
 * `~ping` - Check if bot is online
 
 #### Configuration
@@ -52,4 +54,6 @@ To access a channel, __react to this post__ with the corresponding emoji
 BOT_TOKEN=
 DM_BOT_CHANNELS=
 ROLE_BOT_CHANNELS=
+WELCOME_CHANNELS=
+GUEST_ROLE=
 ```
