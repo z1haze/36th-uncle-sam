@@ -24,15 +24,7 @@ module.exports = {
 
         const url = `https://battlefieldtracker.com/${game}/profile/${platform}/${username}/overview`;
 
-        let response;
-
-        try {
-            response = await got(url);
-        } catch (e) {
-            message.reply('something broke, tell wiggls');
-
-            return message.channel.stopTyping();
-        }
+        const response = await got(url);
 
         const dom = new JSDOM(response.body, {
             url,
