@@ -24,7 +24,19 @@ module.exports = {
 
         const url = `https://battlefieldtracker.com/${game}/profile/${platform}/${username}/overview`;
 
-        const response = await got(url);
+        let response;
+
+        try {
+            response = await got(url);
+        } catch (e) {
+            if (e.response.statusCode === 404) {
+                message.reply('Player not found. Check your spelling and try again.');
+            } else {
+                message.reply('something broke, tell wiggls');
+            }
+
+            return message.channel.stopTyping();
+        }
 
         const dom = new JSDOM(response.body, {
             url,
