@@ -16,6 +16,7 @@ What It Does
 - [x] Request Bot DM message content to you
 - [x] Image attachment via URL
 - [x] Clear messages from a channel
+- [x] Render player stats for bfv
 
 Usage Overview
 ---
@@ -51,6 +52,7 @@ A `guest` role should be configured in the env file under `GUEST_ROLE`. This is 
 * [`~echo`](docs/commands/echo.md) - Send messages via the bot
 * [`~edit`](docs/commands/edit.md) - Edit a bot message with new content
 * [`~image`](docs/commands/echo.md) - Send image attachments via the bot
+* [`~bfvstats`](docs/commands/bfvstats.md) - Get BFV stats for a player
 * `~ping` - Check if bot is online
 
 #### Configuration
