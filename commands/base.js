@@ -129,7 +129,7 @@ module.exports = (client, opts) => {
                     const role = guild.roles.cache.find((role) => role.name === requiredRole);
 
                     if (!role || !member.roles.cache.has(role.id)) {
-                        return message.reply(`You required the '${requiredRole}' role to run this command`);
+                        return message.reply(`You require the '${requiredRole}' role to run this command`);
                     }
                 }
 
