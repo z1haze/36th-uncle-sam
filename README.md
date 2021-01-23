@@ -35,7 +35,9 @@ Usage Overview
 #### `.env`
 
 ```
-BOT_TOKEN=<bot_token>
-DM_BOT_CHANNELS=<channel_id>,<channel_id>
-BFV_STATS_CHANNELS=<channel_id>,<channel_id>
+NODE_ENV=
+SENTRY_DSN=
+BOT_TOKEN=
+DM_BOT_CHANNELS=
+BFV_STATS_CHANNELS=
 ```

@@ -1,11 +1,15 @@
 require('dotenv').config();
 
 const path = require('path');
-const Discord = require('discord.js');
+const {Client} = require('discord.js');
 const {initCommands} = require('./util/commands');
+const monitor = require('./util/sentry');
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const client = new Discord.Client();
+
+monitor.init();
+
+const client = new Client();
 
 client.on('ready', async () => {
     // eslint-disable-next-line no-console
