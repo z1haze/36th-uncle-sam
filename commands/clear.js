@@ -10,7 +10,7 @@ module.exports = {
             .then((messages) => {
                 count = messages.size;
 
-                return message.channel.bulkDelete(messages);
+                return message.channel.bulkDelete(messages, true);
             })
             .then(() => {
                 message.channel.send(`Deleted ${count} messages.`)
