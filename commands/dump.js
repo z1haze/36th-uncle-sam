@@ -6,7 +6,7 @@ module.exports = {
     callback           : (message, args, text) => {
         message.channel.messages.fetch(text)
             .then((msg) => {
-                message.author.send('```' + msg.content + '```');
+                message.author.send('```\n' + msg.content + '\n```');
             })
             .catch((e) => {
                 message.author.send(e.message);
