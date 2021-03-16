@@ -3,6 +3,7 @@ module.exports = {
     expectedArgs       : '<message-id> <content-id>',
     minArgs            : 2,
     requiredPermissions: ['ADMINISTRATOR'],
+    requiredRoles      : ['797590222497120317', '797590310561251349', '797590393650413588'],
     callback           : (message, args, text) => {
         const messageId = args.shift();
 

@@ -118,21 +118,21 @@ module.exports = (client, opts) => {
                 // command runs
 
                 // checks user has permission
-                for (const permission of requiredPermissions) {
-                    if (!member.hasPermission(permission)) {
-                        return message.reply(permissionError);
-                    }
-                }
+                let hasPermission = requiredPermissions.some((permission) => member.hasPermission(permission));
 
-                // checks user has required role
-                for (const requiredRole of requiredRoles) {
-                    const role = guild.roles.cache.find((role) => {
+                // if they do not have the permission necessary, check roles
+                if (!hasPermission) {
+                    hasPermission = requiredRoles.some((requiredRole) => {
+                        const role = guild.roles.cache.find((role) => {
+                            return role.name === requiredRole || role.id === requiredRole;
+                        });
+                        
                         return role.name === requiredRole || role.id === requiredRole;
                     });
+                }
 
-                    if (!role || !member.roles.cache.has(role.id)) {
-                        return message.reply(`You require the '${requiredRole}' role to run this command`);
-                    }
+                if (!hasPermission) {
+                    return message.reply(permissionError);
                 }
 
                 // pull the args from the raw command

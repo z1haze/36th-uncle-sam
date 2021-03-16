@@ -1,9 +1,8 @@
 module.exports = {
-    commands           : ['dm'],
-    expectedArgs       : '<role1> <role2> ... -- attention users, this is a test',
-    minArgs            : 2,
-    requiredPermissions: ['ADMINISTRATOR'],
-    callback           : (message) => {
+    commands    : ['dm'],
+    expectedArgs: '<role1> <role2> ... -- attention users, this is a test',
+    minArgs     : 2,
+    callback    : (message) => {
         const dmChannels = process.env.DM_BOT_CHANNELS.split(',');
 
         if (
