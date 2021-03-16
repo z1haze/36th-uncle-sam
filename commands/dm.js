@@ -1,8 +1,9 @@
 module.exports = {
-    commands    : ['dm'],
-    expectedArgs: '<role1> <role2> ... -- attention users, this is a test',
-    minArgs     : 2,
-    callback    : (message) => {
+    commands           : ['dm'],
+    expectedArgs       : '<role1> <role2> ... -- attention users, this is a test',
+    minArgs            : 2,
+    requiredPermissions: ['ADMINISTRATOR'],
+    callback           : (message) => {
         const dmChannels = process.env.DM_BOT_CHANNELS.split(',');
 
         if (
@@ -25,9 +26,33 @@ module.exports = {
             });
         });
 
+        const results = {
+            promises: [],
+            sent    : 0,
+            blocked : 0
+        };
+
         // deliver messages to each member
         for (const member of members) {
-            member.send(content);
+            results.promises.push(member.send(content)
+                .then(() => results.sent++)
+                .catch(async () => {
+                    await message.channel.send(`${member.user} did not receive the message (bot was blocked).`);
+                    results.blocked++;
+                })
+            );
         }
+
+        Promise.all(results.promises)
+            .then(() => {
+                let output = 'Message sending complete.\n';
+
+                if (results.blocked > 0) {
+                    output += '> ' + results.blocked + ' users did not receive a message:\n';
+                    output += '> - ' + results.blocked + ' blocked';
+                }
+
+                message.channel.send(output);
+            });
     }
 };

@@ -7,15 +7,18 @@ module.exports = {
         const messageId = args.shift();
 
         message.channel.messages.fetch(messageId)
-            .then((msg) => {
-                text = text.replace(messageId, '');
+            .then(async (msg) => {
+                if (msg.author.id === msg.client.user.id) {
+                    text = text.replace(messageId, '');
 
-                msg.edit(text);
+                    return msg.edit(text);
+                }
             })
             .catch((e) => {
                 message.author.send(e.message);
+            })
+            .then(() => {
+                message.delete();
             });
-
-        message.delete();
     }
 };

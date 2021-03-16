@@ -4,7 +4,7 @@ module.exports = {
     minArgs            : 2,
     maxArgs            : 2,
     requiredPermissions: ['ADMINISTRATOR'],
-    callback           : (message, args, text) => {
+    callback           : (message, args) => {
         const messageId = args[0];
         const emoji = args[1];
 

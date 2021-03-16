@@ -3,7 +3,7 @@ module.exports = {
     expectedArgs       : '',
     minArgs            : 0,
     requiredPermissions: ['ADMINISTRATOR'],
-    callback           : (message, args, text) => {
+    callback           : (message) => {
         let count;
 
         message.channel.messages.fetch()
