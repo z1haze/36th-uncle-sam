@@ -8,10 +8,11 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = {
-    commands    : ['bfvstats'],
-    expectedArgs: '<gamer tag>',
-    minArgs     : 1,
-    callback    : async (message, args, text) => {
+    commands           : ['bfvstats'],
+    expectedArgs       : '<gamer tag>',
+    minArgs            : 1,
+    requiredPermissions: ['SEND_MESSAGES'],
+    callback           : async (message, args, text) => {
         if (process.env.BFV_STATS_CHANNELS.indexOf(message.channel.id) === -1) {
             return message.reply('Not in this channel');
         }

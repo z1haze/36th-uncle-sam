@@ -115,8 +115,6 @@ module.exports = (client, opts) => {
 
         for (const alias of commands) {
             if (content.toLowerCase().startsWith(`${prefix + alias.toLowerCase()}`)) {
-                // command runs
-
                 // checks user has permission
                 let hasPermission = requiredPermissions.some((permission) => member.hasPermission(permission));
 
@@ -127,7 +125,7 @@ module.exports = (client, opts) => {
                             return role.name === requiredRole || role.id === requiredRole;
                         });
                         
-                        return role.name === requiredRole || role.id === requiredRole;
+                        return role.name.toLowerCase() === requiredRole.toLowerCase() || role.id === requiredRole;
                     });
                 }
 
