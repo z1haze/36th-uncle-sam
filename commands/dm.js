@@ -47,7 +47,7 @@ module.exports = {
             .then(() => {
                 let output = 'Message sending complete.\n';
 
-                output += `Sent to a total of ${results.sent} users\n`;
+                output += `> Sent to a total of ${results.sent} users\n`;
 
                 if (results.blocked > 0) {
                     output += '> ' + results.blocked + ' users did not receive a message:\n';
