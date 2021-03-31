@@ -54,7 +54,7 @@ module.exports = {
 
         const browser = await puppeteer.launch({headless: true});
         const page = await browser.newPage();
-        await page.goto('https://thefighting36th.com/stats');
+        await page.goto('http://stats.thefighting36th.com/');
 
         // get size of div for screenshot
         const dimensions = await page.evaluate(() => {
