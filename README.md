@@ -15,6 +15,7 @@ What It Does
 - [x] Image attachment via URL
 - [x] Clear last 14 days of messages from the current channel
 - [x] Render player stats for bfv
+- [x] Promote members to their next rank
 
 Usage Overview
 ---
@@ -27,6 +28,7 @@ Usage Overview
 * [`~edit`](docs/commands/edit.md) - Edit a bot message with new content
 * [`~image`](docs/commands/echo.md) - Send image attachments via the bot
 * [`~bfvstats`](docs/commands/bfvstats.md) - Get BFV stats for a player
+* [`~promote`](docs/commands/promote.md) - Handles promoting a member to the next rank
 * `~clear` - Clear last 14 days of messages from the current channel
 * `~ping` - Check if bot is online
 

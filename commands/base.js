@@ -56,30 +56,6 @@ const validatePermissions = (perms) => {
     }
 };
 
-/**
- * Convert a string of various formats to an array
- *
- * @param str
- * @returns {*[]|*}
- */
-const strToArr = (str) => {
-    let delimiter;
-
-    if (str.indexOf(', ') > -1) {
-        delimiter = ', ';
-    } else if (str.indexOf(',') > -1) {
-        delimiter = ',';
-    } else if (str.indexOf(' ') > -1) {
-        delimiter = ' ';
-    }
-
-    if (delimiter) {
-        return str.split(delimiter);
-    } else {
-        return [str];
-    }
-};
-
 module.exports = (client, opts) => {
     const {
         expectedArgs = '',
@@ -87,38 +63,30 @@ module.exports = (client, opts) => {
         minArgs = 0,
         maxArgs = null,
         requiredRoles = [],
+        requiredPermissions = [],
         callback
     } = opts;
 
-    let {commands, requiredPermissions = []} = opts;
-
-    // convert commands to array
-    if (typeof commands === 'string') {
-        commands = strToArr(commands);
-    }
+    const {commands} = opts;
 
     // eslint-disable-next-line no-console
     console.log(`Registering command: "${commands[0]}"`);
 
-    // validate permissions
+    // ensure required permissions are actual valid discord permissions
     if (requiredPermissions.length) {
-        if (typeof requiredPermissions === 'string') {
-            requiredPermissions = strToArr(requiredPermissions);
-        }
-
         validatePermissions(requiredPermissions);
     }
 
-    // command listener
+    // listen for messages being sent in discord
     client.on('message', (message) => {
         const {member, content, guild} = message;
 
         for (const alias of commands) {
             if (content.toLowerCase().startsWith(`${prefix + alias.toLowerCase()}`)) {
-                // checks user has permission
+                // check if user has correct permission
                 let hasPermission = requiredPermissions.some((permission) => member.hasPermission(permission));
 
-                // if they do not have the permission necessary, check roles
+                // fallback to role check if they do not have the correct permission
                 if (!hasPermission) {
                     hasPermission = requiredRoles.some((requiredRole) => {
                         const role = guild.roles.cache.find((role) => {
