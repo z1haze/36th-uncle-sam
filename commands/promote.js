@@ -2,6 +2,7 @@ module.exports = {
     commands           : ['promote'],
     expectedArgs       : '<member> <reason>',
     minArgs            : 2,
+    requiredRoles      : ['797590310561251349', '733212028721954827', '797590222497120317'],
     requiredPermissions: ['ADMINISTRATOR'],
     callback           : async (message, args, text) => {
         // ensure command was sent from an allowed channel
