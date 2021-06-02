@@ -52,7 +52,7 @@ module.exports = {
             'bfv/stats': state['bfv/stats']
         };
 
-        const browser = await puppeteer.launch({headless: true});
+        const browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
         const page = await browser.newPage();
         await page.goto('http://stats.thefighting36th.com/');
 
