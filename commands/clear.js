@@ -4,16 +4,10 @@ module.exports = {
     minArgs            : 0,
     requiredPermissions: ['ADMINISTRATOR'],
     callback           : (message) => {
-        let count;
-
         message.channel.messages.fetch()
-            .then((messages) => {
-                count = messages.size;
-
-                return message.channel.bulkDelete(messages, true);
-            })
-            .then(() => {
-                message.channel.send(`Deleted ${count} messages.`)
+            .then((messages) => message.channel.bulkDelete(messages, true))
+            .then(({size}) => {
+                message.channel.send(`Deleted ${size} messages.`)
                     .then((message) => message.delete({
                         timeout: 5000
                     }));
