@@ -90,6 +90,14 @@ module.exports = {
             await member.setNickname(`${nextRank.name}. ${member.user.username}`);
         }
 
+        if (currentRank.name === 'RCT') {
+            const recruitRank = member.roles.cache.find((role) => role.name === 'Recruit');
+            const memberRank = member.roles.cache.find((role) => role.name === 'Member');
+
+            await member.roles.add(memberRank);
+            await member.roles.remove(recruitRank);
+        }
+
         await member.roles.add(nextRank);
         await member.roles.remove(currentRank);
 
