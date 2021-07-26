@@ -120,6 +120,12 @@ module.exports = {
             throw new Error(`Channel ${process.env.PROMOTIONS_CHANNEL_ID} does not exist!`);
         }
 
+        const logChannel = message.guild.channels.cache.get(process.env.PROMOTION_LOG_CHANNEL_ID);
+
+        if (logChannel) {
+            await logChannel.send(`${message.author.toString()} promoted ${member.user.toString()} from ${currentRank.name} to ${nextRank.name}`);
+        }
+
         await message.delete();
         await channel.send(output);
     }
