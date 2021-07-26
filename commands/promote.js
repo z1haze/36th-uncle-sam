@@ -92,7 +92,7 @@ module.exports = {
 
         if (currentRank.name === 'RCT') {
             const recruitRank = member.roles.cache.find((role) => role.name === 'Recruit');
-            const memberRank = member.roles.cache.find((role) => role.name === 'Member');
+            const memberRank = message.guild.roles.cache.find((role) => role.name === 'Member');
 
             await member.roles.add(memberRank);
             await member.roles.remove(recruitRank);
