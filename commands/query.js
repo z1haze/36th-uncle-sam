@@ -39,13 +39,21 @@ module.exports = {
     callback           : async (message, args) => {
         // ~query rank RCT
 
+        const outputChannel = message.guild.channels.cache.get(process.env.PROMOTION_LIST_CHANNEL_ID);
+
+        if (!outputChannel) {
+            return message.reply('No output channel configured');
+        }
+
+        outputChannel.startTyping();
+
         if (args[0] === 'rank') {
             const rankRole = message.mentions.roles.first();
 
             if (rankRole) {
                 const membersWithRank = message.guild.members.cache.filter((member) => member.roles.cache.has(rankRole.id));
 
-                const auditLogs = (await getLotsOfAuditLogs(message.guild,'MEMBER_ROLE_UPDATE', 1000))
+                const auditLogs = (await getLotsOfAuditLogs(message.guild,'MEMBER_ROLE_UPDATE', 2500))
                     .filter((logEntry) =>
                         logEntry.changes.some((change) => change.key === '$add') && logEntry.targetType === 'USER');
 
@@ -102,12 +110,10 @@ module.exports = {
                     .setTimestamp()
                     .setFooter('Brought to you by Uncle Sam', 'https://thefighting36th.com/img/favicon-16x16.png');
 
-                const outputChannel = message.guild.channels.cache.get(process.env.PROMOTION_LIST_CHANNEL_ID);
-
-                if (outputChannel) {
-                    await outputChannel.send(embed);
-                }
+                await outputChannel.send(embed);
             }
         }
+
+        return outputChannel.stopTyping();
     }
 };
