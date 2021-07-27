@@ -21,12 +21,16 @@ module.exports = {
                     .setThumbnail('https://thefighting36th.com/img/favicon-32x32.png')
                     .addFields(
                         { name: 'Members', value: [...membersOfRank.values()].join('\n'), inline: true },
-                        {name: 'Date of Rank', value: 'tbd'}
+                        {name: 'Date of Rank', value: 'tbd', inline: true}
                     )
                     .setTimestamp()
                     .setFooter('Brought to you by Uncle Sam', 'https://thefighting36th.com/img/favicon-16x16.png');
 
-                await message.author.send(embed);
+                const outputChannel = message.guild.channels.cache.get(process.env.PROMOTION_LIST_CHANNEL_ID);
+
+                if (outputChannel) {
+                    await outputChannel.send(embed);
+                }
             }
         }
     }
