@@ -2,7 +2,7 @@ const {MessageEmbed} = require('discord.js');
 
 module.exports = {
     commands           : ['query'],
-    expectedArgs       : '<query_of> <role_name>',
+    expectedArgs       : '<query_of> <search>',
     minArgs            : 2,
     requiredPermissions: ['ADMINISTRATOR'],
     callback           : async (message, args) => {
@@ -12,7 +12,7 @@ module.exports = {
             const rankRole = message.mentions.roles.first();
                 
             if (rankRole) {
-                const membersOfRank = message.guild.members.cache.filter((member) => member.roles.has(rankRole));
+                const membersOfRank = message.guild.members.cache.filter((member) => member.roles.cache.has(rankRole.id));
                     
                 const embed = new MessageEmbed()
                     .setColor('#cd1c1c')
