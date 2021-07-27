@@ -1,7 +1,35 @@
-const {MessageEmbed} = require('discord.js');
+const {MessageEmbed, Collection} = require('discord.js');
 
 const monthNames = ['JAN', 'FED', 'MAR', 'APR', 'MAY', 'JUN',
     'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+const getLotsOfAuditLogs = async (guild, type, limit = 100) => {
+    let result = new Collection();
+    let lastId;
+
+    const options = {limit: 100};
+
+    if (type) {
+        options.type = type;
+    }
+
+    while (true) {
+        if (lastId) {
+            options.before = lastId;
+        }
+
+        const currentResult = (await guild.fetchAuditLogs(options)).entries;
+
+        lastId = currentResult.last().id;
+        result = result.concat(currentResult);
+
+        if (currentResult.size !== 100 || result.size >= limit) {
+            break;
+        }
+    }
+
+    return result;
+};
 
 module.exports = {
     commands           : ['query'],
@@ -17,11 +45,9 @@ module.exports = {
             if (rankRole) {
                 const membersWithRank = message.guild.members.cache.filter((member) => member.roles.cache.has(rankRole.id));
 
-                const auditLogs = (await message.guild.fetchAuditLogs({
-                    limit: 2000,
-                    type : 'MEMBER_ROLE_UPDATE'
-                })).entries.filter((logEntry) =>
-                    logEntry.changes.some((change) => change.key === '$add') && logEntry.targetType === 'USER');
+                const auditLogs = (await getLotsOfAuditLogs(message.guild,'MEMBER_ROLE_UPDATE', 1000))
+                    .filter((logEntry) =>
+                        logEntry.changes.some((change) => change.key === '$add') && logEntry.targetType === 'USER');
 
                 // iterate over the audit log, trying to match audit entries with our member collection
                 auditLogs.each((logEntry) => {
