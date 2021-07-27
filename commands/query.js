@@ -92,7 +92,7 @@ module.exports = {
                     .addFields(
                         {
                             name  : 'Members',
-                            value : [...membersWithRank.values()].join('\n'),
+                            value : [...membersWithRank.values()].map((member) => member.displayName).join('\n'),
                             inline: true
                         },
                         {
