@@ -16,13 +16,12 @@ module.exports = {
                     
                 const embed = new MessageEmbed()
                     .setColor('#cd1c1c')
-                    .setTitle('Member Result')
-                    .setURL('https://thefighting36th.com')
                     .setAuthor('Uncle Sam', 'https://thefighting36th.com/img/favicon-16x16.png', 'https://thefighting36th.com')
                     .setDescription(`Members of rank: ${rankRole.name}`)
                     .setThumbnail('https://thefighting36th.com/img/favicon-32x32.png')
                     .addFields(
-                        { name: 'Members', value: [...membersOfRank.values()].join('\n'), inline: true }
+                        { name: 'Members', value: [...membersOfRank.values()].join('\n'), inline: true },
+                        {name: 'Date of Rank', value: 'tbd'}
                     )
                     .setTimestamp()
                     .setFooter('Brought to you by Uncle Sam', 'https://thefighting36th.com/img/favicon-16x16.png');
