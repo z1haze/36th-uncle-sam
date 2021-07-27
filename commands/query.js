@@ -50,7 +50,7 @@ module.exports = {
                                     return member.dateOfRank.getDate() + monthNames[member.dateOfRank.getMonth()] + member.dateOfRank.getFullYear();
                                 }
 
-                                return '';
+                                return '\u200B';
                             }).join('\n'),
                             inline: true
                         }
