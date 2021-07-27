@@ -23,7 +23,7 @@ module.exports = {
                     type: 'MEMBER_ROLE_UPDATE'
                 });
 
-                auditLog.entries().each((entry) => {
+                auditLog.entries.each((entry) => {
                     const member = membersOfRank.get(entry.id);
 
                     if (member) {
