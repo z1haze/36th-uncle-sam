@@ -18,8 +18,10 @@ module.exports = {
                 const membersWithRank = message.guild.members.cache.filter((member) => member.roles.cache.has(rankRole.id));
 
                 const auditLogs = (await message.guild.fetchAuditLogs({
-                    type: 'MEMBER_ROLE_UPDATE'
-                })).entries.filter((logEntry) => logEntry.changes.length && logEntry.changes.some((change) => change.key === '$add') && logEntry.targetType === 'USER');
+                    limit: 2000,
+                    type : 'MEMBER_ROLE_UPDATE'
+                })).entries.filter((logEntry) =>
+                    logEntry.changes.some((change) => change.key === '$add') && logEntry.targetType === 'USER');
 
                 // iterate over the audit log, trying to match audit entries with our member collection
                 auditLogs.each((logEntry) => {
@@ -29,24 +31,22 @@ module.exports = {
                         return;
                     }
 
-                    if (logEntry.changes.length) {
-                        const addChanges = logEntry.changes.filter((change) => change.key === '$add');
+                    const addChanges = logEntry.changes.filter((change) => change.key === '$add');
 
-                        if (addChanges.length) {
-                            // iterate over the changes
-                            addChanges.some((change) => {
-                                if (change.new instanceof Array) {
-                                    // iterate over the new changes
-                                    return change.new.some((newChange) => {
-                                        if (newChange.id === rankRole.id) {
-                                            member.dateOfRank = logEntry.createdAt;
+                    if (addChanges.length) {
+                        // iterate over the changes
+                        addChanges.some((change) => {
+                            if (change.new instanceof Array) {
+                                // iterate over the new changes
+                                return change.new.some((newChange) => {
+                                    if (newChange.id === rankRole.id) {
+                                        member.dateOfRank = logEntry.createdAt;
 
-                                            return true;
-                                        }
-                                    });
-                                }
-                            });
-                        }
+                                        return true;
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
 
