@@ -19,16 +19,34 @@ module.exports = {
 
                 const auditLogs = (await message.guild.fetchAuditLogs({
                     type: 'MEMBER_ROLE_UPDATE'
-                })).entries.filter((logEntry) => logEntry.changes.length && logEntry.changes[0].key === '$add' && logEntry.targetType === 'USER');
+                })).entries.filter((logEntry) => logEntry.changes.length && logEntry.changes.some((change) => change.key === '$add') && logEntry.targetType === 'USER');
 
                 // iterate over the audit log, trying to match audit entries with our member collection
                 auditLogs.each((logEntry) => {
                     const member = membersWithRank.get(logEntry.target.id);
 
-                    // if the member in the audit entry matches an entry in our membersWithRank
-                    // collection, AND the role added from the audit entry matches the rankRole
-                    if (member && logEntry.changes[0].new[0].id === rankRole.id) {
-                        member.dateOfRank = logEntry.createdAt;
+                    if (!member) {
+                        return;
+                    }
+
+                    if (logEntry.changes.length) {
+                        const addChanges = logEntry.changes.filter((change) => change.key === '$add');
+
+                        if (addChanges.length) {
+                            // iterate over the changes
+                            addChanges.some((change) => {
+                                if (change.new instanceof Array) {
+                                    // iterate over the new changes
+                                    return change.new.some((newChange) => {
+                                        if (newChange.id === rankRole.id) {
+                                            member.dateOfRank = logEntry.createdAt;
+
+                                            return true;
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     }
                 });
 
