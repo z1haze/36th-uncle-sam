@@ -14,7 +14,7 @@ module.exports = {
             if (rankRole) {
                 // get members of requested rank and stub out data for message
                 const membersOfRank = message.guild.members.cache.filter((member) => member.roles.cache.has(rankRole.id))
-                    .map((member) => {
+                    .mapValues((member) => {
                         return {...member, dateOfRank: ''};
                     });
 
