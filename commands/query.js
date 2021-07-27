@@ -12,7 +12,24 @@ module.exports = {
             const rankRole = message.mentions.roles.first();
                 
             if (rankRole) {
-                const membersOfRank = message.guild.members.cache.filter((member) => member.roles.cache.has(rankRole.id));
+                // get members of requested rank and stub out data for message
+                const membersOfRank = message.guild.members.cache.filter((member) => member.roles.cache.has(rankRole.id))
+                    .map((member) => {
+                        return {...member, dateOfRank: ''};
+                    });
+
+                // pull the audit log to try to get the dates (this is the only way to get this sort of information, and is limited by 90 days history, among other things)
+                const auditLog = await message.guild.fetchAuditLogs({
+                    type: 'MEMBER_ROLE_UPDATE'
+                });
+
+                auditLog.entries().each((entry) => {
+                    const member = membersOfRank.get(entry.id);
+
+                    if (member) {
+                        member.dateOfRank = entry.createdAt;
+                    }
+                });
                     
                 const embed = new MessageEmbed()
                     .setColor('#cd1c1c')
@@ -21,7 +38,7 @@ module.exports = {
                     .setThumbnail('https://thefighting36th.com/img/favicon-32x32.png')
                     .addFields(
                         { name: 'Members', value: [...membersOfRank.values()].join('\n'), inline: true },
-                        {name: 'Date of Rank', value: 'tbd', inline: true}
+                        {name: 'Date of Rank', value: [...membersOfRank.values().map((member) => member.dateOfRank).join('\n')], inline: true}
                     )
                     .setTimestamp()
                     .setFooter('Brought to you by Uncle Sam', 'https://thefighting36th.com/img/favicon-16x16.png');
