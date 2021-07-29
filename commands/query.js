@@ -36,6 +36,7 @@ module.exports = {
     expectedArgs       : '<query_of> <search>',
     minArgs            : 2,
     requiredPermissions: ['ADMINISTRATOR'],
+    requiredRoles      : ['870141002218889286'],
     callback           : async (message, args) => {
         // ~query rank RCT
 
