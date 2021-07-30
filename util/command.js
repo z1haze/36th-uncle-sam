@@ -29,7 +29,25 @@ module.exports = {
                         required   : false
                     }
                 ]
-            }
+            },
+            {
+                name       : 'react',
+                description: 'Bot, react to this post!',
+                options    : [
+                    {
+                        type       : 'STRING',
+                        name       : 'messageid',
+                        description: 'The id of the message the bot will react to',
+                        required   : true
+                    },
+                    {
+                        type       : 'STRING',
+                        name       : 'reaction',
+                        description: 'The emoji that the bot will react with',
+                        required   : true
+                    }
+                ]
+            },
         ]);
 
         commandManager.client.on('interactionCreate', async (interaction) => {
@@ -39,6 +57,8 @@ module.exports = {
                         return require('../commands/ping')(interaction);
                     case 'clear':
                         return require('../commands/clear')(interaction);
+                    case 'react':
+                        return require('../commands/react')(interaction);
                 }
             }
         });

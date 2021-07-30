@@ -1,21 +1,15 @@
-module.exports = {
-    commands           : ['react'],
-    expectedArgs       : '<message_id> <emoji>',
-    minArgs            : 2,
-    maxArgs            : 2,
-    requiredPermissions: ['ADMINISTRATOR'],
-    callback           : (message, args) => {
-        const messageId = args[0];
-        const emoji = args[1];
+module.exports = (interaction) => {
+    const messageId = interaction.options.get('messageid');
+    const reaction = interaction.options.get('reaction');
 
-        message.channel.messages.fetch(messageId)
-            .then((msg) => {
-                msg.react(emoji);
-            })
-            .catch((e) => {
-                message.author.send(e.message);
-            });
-
-        message.delete();
-    }
+    return interaction.channel.messages.fetch(messageId.value)
+        .then((message) => message.react(reaction.value))
+        .then(() => {
+            interaction.reply('Reaction added.');
+            setTimeout(() => interaction.deleteReply(), 2000);
+        })
+        .catch((e) => interaction.reply({
+            content  : e.message,
+            ephemeral: true
+        }));
 };
