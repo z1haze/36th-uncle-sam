@@ -45,6 +45,12 @@ module.exports = {
                         name       : 'reaction',
                         description: 'The emoji that the bot will react with',
                         required   : true
+                    },
+                    {
+                        type       : 'BOOLEAN',
+                        name       : 'remove',
+                        description: 'Should the reaction be removed?',
+                        required   : false
                     }
                 ]
             },
