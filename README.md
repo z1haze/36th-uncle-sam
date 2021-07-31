@@ -26,9 +26,9 @@ Usage Overview
 * [`/clear`](docs/commands/clear.md) - Clear messages from the current channel
 * [`/reaction`](docs/commands/reaction.md) - Add or remove bot reactions to a message
 * [`/dm`](docs/commands/dm.md) - Send DM's to users and/or roles
-* [`~dump`](docs/commands/dump.md) - DM the sender with the content of a message
-* [`~echo`](docs/commands/echo.md) - Send messages via the bot
-* [`~edit`](docs/commands/edit.md) - Edit a bot message with new content
+* [`/dump`](docs/commands/dump.md) - DM the sender with the content of a message
+* [`/echo`](docs/commands/echo.md) - Send messages via the bot
+* [`/edit`](docs/commands/edit.md) - Edit a bot message with new content
 * [`~image`](docs/commands/echo.md) - Send image attachments via the bot
 * [`~bfvstats`](docs/commands/bfvstats.md) - Get BFV stats for a player
 * [`~promote`](docs/commands/promote.md) - Handles promoting a member to the next rank
