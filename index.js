@@ -9,15 +9,23 @@ const GUILD_ID = process.env.GUILD_ID;
 // require('./util/sentry').init();
 
 const client = new Client({
-    intents: ['GUILDS']
+    intents: ['GUILDS', 'GUILD_MEMBERS']
 });
 
 client.on('ready', async () => {
     // eslint-disable-next-line no-console
     console.info(`Logged in as ${client.user.tag}!`);
 
-    const commandManager = client.guilds.cache.get(GUILD_ID).commands;
+    const guild = client.guilds.cache.get(GUILD_ID);
 
+    // update caches
+    await guild.members.fetch();
+    await guild.roles.fetch();
+    await guild.channels.fetch();
+
+    const commandManager = guild.commands;
+
+    // setup commands
     await registerCommands(commandManager);
 });
 

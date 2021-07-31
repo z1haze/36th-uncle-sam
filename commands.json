@@ -1,0 +1,117 @@
+{
+  "commands": [
+    {
+      "name":"ping",
+      "description":"Bot, are you alive?"
+    },
+    {
+      "name":"clear",
+      "description":"Delete messages in the current channel",
+      "options":[
+        {
+          "type":"STRING",
+          "name":"timeframe",
+          "description":"How far back to clear the chat - <1h30m10s>",
+          "required":false
+        },
+        {
+          "type":"NUMBER",
+          "name":"limit",
+          "description":"At most, how many messages should be deleted - <100>"
+        },
+        {
+          "type":"MENTIONABLE",
+          "name":"user",
+          "description":"Tag a specific user who\"s messages you wish to filter to - <@someone>",
+          "required":false
+        }
+      ]
+    },
+    {
+      "name":"reaction",
+      "description":"Bot, react to this post!",
+      "options":[
+        {
+          "type":"SUB_COMMAND",
+          "name":"add",
+          "description":"Add a reaction to a message",
+          "options":[
+            {
+              "type":"STRING",
+              "name":"messageid",
+              "description":"The id of the message the bot will react to",
+              "required":true
+            },
+            {
+              "type":"STRING",
+              "name":"reaction",
+              "description":"The emoji that the bot will react with",
+              "required":true
+            }
+          ]
+        },
+        {
+          "type":"SUB_COMMAND",
+          "name":"remove",
+          "description":"Remove a reaction from a message",
+          "options":[
+            {
+              "type":"STRING",
+              "name":"messageid",
+              "description":"The id of the message the bot will react to",
+              "required":true
+            },
+            {
+              "type":"STRING",
+              "name":"reaction",
+              "description":"The emoji that the bot will react with",
+              "required":true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name":"dm",
+      "description":"Send a DM to specific users/roles",
+      "options":[
+        {
+          "type":"STRING",
+          "name":"message",
+          "description":"The content of the message",
+          "required":true
+        },
+        {
+          "type":"MENTIONABLE",
+          "name":"recipient1",
+          "description":"@mentions who should receive the message",
+          "required":true
+        },
+        {
+          "type":"MENTIONABLE",
+          "name":"recipient2",
+          "description":"@mentions who should receive the message",
+          "required":false
+        },
+        {
+          "type":"MENTIONABLE",
+          "name":"recipient3",
+          "description":"@mentions who should receive the message",
+          "required":false
+        },
+        {
+          "type":"MENTIONABLE",
+          "name":"recipient4",
+          "description":"@mentions who should receive the message",
+          "required":false
+        },
+        {
+          "type":"MENTIONABLE",
+          "name":"recipient5",
+          "description":"@mentions who should receive the message",
+          "required":false
+        }
+      ]
+    }
+  ]
+}

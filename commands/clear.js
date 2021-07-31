@@ -29,9 +29,11 @@ module.exports = async (interaction) => {
     interaction.channel.bulkDelete(messages, true)
         .then(({size: deletedSize}) => {
             if (deletedSize !== size) {
-                return interaction.reply(`Deleted ${deletedSize} of ${size} messages. Some messages were too old to delete automatically.`);
+                interaction.reply(`Deleted ${deletedSize} of ${size} messages. Some messages were too old to delete automatically.`);
             } else {
-                return interaction.reply(`Deleted ${deletedSize} messages.`);
+                interaction.reply(`Deleted ${deletedSize} messages.`);
             }
+
+            setTimeout(() => interaction.deleteReply(), 3000);
         });
 };

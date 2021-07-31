@@ -3,7 +3,7 @@
 **[↤ Overview](../README.md)**
 
 ```bash
-/react [messageid] [reaction] [remove]
+/reaction [add/remove] [messageid] [reaction]
 ```
 
 This command will react to a message with a provided reaction/emoji. Both the messageid
@@ -17,11 +17,11 @@ Example Usage:
 React to a message with messageid 841872626037030926 with the thumbs up emoji
 
 ```bash
-/react messageid: 841872626037030926 reaction: :thumbsup:
+/reaction add messageid: 841872626037030926 reaction: :thumbsup:
 ```
 
 Remove thumbs up reaction from message with id 841872626037030926
 
 ```bash
-/react messageid: 841872626037030926 reaction: :thumbsup: remove: True
+/reaction remove messageid: 841872626037030926 reaction: :thumbsup:
 ```
