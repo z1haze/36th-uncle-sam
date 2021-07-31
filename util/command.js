@@ -16,6 +16,12 @@ module.exports = {
                         return require('../commands/reaction')(interaction);
                     case 'dm':
                         return require('../commands/dm')(interaction);
+                    case 'dump':
+                        return require('../commands/dump')(interaction);
+                    case 'echo':
+                        return require('../commands/echo')(interaction);
+                    case 'edit':
+                        return require('../commands/edit')(interaction);
                 }
             }
         });

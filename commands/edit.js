@@ -1,25 +1,17 @@
-module.exports = {
-    commands           : ['edit'],
-    expectedArgs       : '<message-id> <content-id>',
-    minArgs            : 2,
-    requiredPermissions: ['ADMINISTRATOR'],
-    requiredRoles      : ['797590222497120317', '797590310561251349', '797590393650413588'],
-    callback           : (message, args, text) => {
-        const messageId = args.shift();
+module.exports = (interaction) => {
+    const messageId = interaction.options.get('messageid').value;
+    const content = interaction.options.get('message').value;
 
-        message.channel.messages.fetch(messageId)
-            .then(async (msg) => {
-                if (msg.author.id === msg.client.user.id) {
-                    text = text.replace(messageId, '');
+    interaction.channel.messages.fetch(messageId)
+        .then(async (message) => {
+            if (message.author.id === interaction.client.user.id) {
+                await message.edit(content);
 
-                    return msg.edit(text);
-                }
-            })
-            .catch((e) => {
-                message.author.send(e.message);
-            })
-            .then(() => {
-                message.delete();
-            });
-    }
+                interaction.reply('Message Edited.');
+            } else {
+                interaction.reply('Cannot edit message not authored by bot.');
+            }
+        })
+        .catch((e) => interaction.reply(e.message))
+        .then(() => setTimeout(() => interaction.deleteReply(), 3000));
 };

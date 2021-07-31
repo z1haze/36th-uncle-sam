@@ -3,7 +3,7 @@
 **[↤ Overview](../README.md)**
 
 ```bash
-~dump <message-id>
+/dump [messageid]
 ```
 
 Request the bot to DM you a message's content by its ID
@@ -12,5 +12,5 @@ Example Usage:
 ---
 
 ```bash
-~dump 791757401443401768
+/dump messageid: 791757401443401768
 ```

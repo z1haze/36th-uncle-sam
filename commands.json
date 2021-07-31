@@ -5,6 +5,48 @@
       "description":"Bot, are you alive?"
     },
     {
+      "name":"dump",
+      "description":"Have the bot DM you the raw contents of a message,",
+      "options": [
+        {
+          "type":"STRING",
+          "name":"messageid",
+          "description":"The id of the message being dumped",
+          "required":true
+        }
+      ]
+    },
+    {
+      "name":"echo",
+      "description":"Have the bot send a message to the current channel",
+      "options": [
+        {
+          "type":"STRING",
+          "name":"message",
+          "description":"the content of the message the bot will echo",
+          "required":true
+        }
+      ]
+    },
+    {
+      "name":"edit",
+      "description":"Edit a message previously sent by the bot",
+      "options": [
+        {
+          "type":"STRING",
+          "name":"messageid",
+          "description":"The id of the message being edited",
+          "required":true
+        },
+        {
+          "type":"STRING",
+          "name":"message",
+          "description":"The message content",
+          "required":true
+        }
+      ]
+    },
+    {
       "name":"clear",
       "description":"Delete messages in the current channel",
       "options":[
