@@ -1,4 +1,4 @@
-const {Collection} = require('@discordjs/collection');
+const {Collection} = require('discord.js');
 
 module.exports = {
     getMessages: async (channel, {limit = 100, ...opts}) => {

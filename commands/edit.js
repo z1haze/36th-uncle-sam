@@ -7,11 +7,16 @@ module.exports = (interaction) => {
             if (message.author.id === interaction.client.user.id) {
                 await message.edit(content);
 
-                interaction.reply('Message Edited.');
+                return 'Message Edited.';
             } else {
-                interaction.reply('Cannot edit message not authored by bot.');
+                return 'Cannot edit message not authored by bot.';
             }
         })
-        .catch((e) => interaction.reply(e.message))
-        .then(() => setTimeout(() => interaction.deleteReply(), 3000));
+        .catch((e) => e.message)
+        .then((content) => {
+            return interaction.reply({
+                content,
+                ephemeral: true
+            });
+        });
 };

@@ -28,12 +28,13 @@ module.exports = async (interaction) => {
 
     interaction.channel.bulkDelete(messages, true)
         .then(({size: deletedSize}) => {
-            if (deletedSize !== size) {
-                interaction.reply(`Deleted ${deletedSize} of ${size} messages. Some messages were too old to delete automatically.`);
-            } else {
-                interaction.reply(`Deleted ${deletedSize} messages.`);
-            }
+            const content = deletedSize !== size
+                ? `Deleted ${deletedSize} of ${size} messages. Some messages were too old to delete automatically.`
+                : `Deleted ${deletedSize} messages.`;
 
-            setTimeout(() => interaction.deleteReply(), 3000);
+            return interaction.reply({
+                content,
+                ephemeral: true
+            });
         });
 };

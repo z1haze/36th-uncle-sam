@@ -22,6 +22,8 @@ module.exports = {
                         return require('../commands/echo')(interaction);
                     case 'edit':
                         return require('../commands/edit')(interaction);
+                    case 'promote':
+                        return require('../commands/promote')(interaction);
                 }
             }
         });
