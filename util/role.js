@@ -47,6 +47,16 @@ const getNextMemberRankRole = (guildMember) => {
     }
 };
 
+const getMemberPlatoonRole = (guildMember) => {
+    const PLATOON_ROLE_DS = process.env.PLATOON_ROLE_IDS.split(',');
+
+    for (let i = 0; i < PLATOON_ROLE_DS.length; i++) {
+        if (guildMember.roles.cache.has(PLATOON_ROLE_DS[i])) {
+            return guildMember.guild.roles.cache.get(PLATOON_ROLE_DS[i]);
+        }
+    }
+};
+
 const getDividerRoles = (guild) => {
     const DIVIDER_ROLE_IDS = process.env.DIVIDER_ROLE_IDS.split(',');
     const dividerRoles = new Collection();
@@ -71,5 +81,6 @@ module.exports = {
     getMemberRole,
     getMemberRankRole,
     getNextMemberRankRole,
+    getMemberPlatoonRole,
     getDividerRoles
 };

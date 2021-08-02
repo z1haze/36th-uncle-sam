@@ -9,7 +9,8 @@ const GUILD_ID = process.env.GUILD_ID;
 // require('./util/sentry').init();
 
 const client = new Client({
-    intents: ['GUILDS', 'GUILD_MEMBERS', 'DIRECT_MESSAGE_REACTIONS']
+    intents : ['GUILDS', 'GUILD_MEMBERS', 'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS'],
+    partials: ['CHANNEL']
 });
 
 client.on('ready', async () => {
