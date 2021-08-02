@@ -1,76 +1,39 @@
 const {getDividerRoles, getProcessingRole, isProcessing, isRecruit, getMemberRankRole, getRecruitRole, getMemberRole, getNextMemberRankRole, getMemberPlatoonRole} = require('../util/role');
-
-const setNickName = async (guildMember) => {
-    guildMember = await guildMember.fetch(); // force update the member
-    const rankRole = getMemberRankRole(guildMember);
-
-    // give a new nickname
-    // example nickname: 2/1 SGT. PERSONS
-    if (guildMember.nickname) {
-        const nickParts = guildMember.nickname.split(' ');
-
-        let unitPart = '';
-        let namePart = '';
-
-        for (let i = 0; i < nickParts.length; i++) {
-            // search for the unit part of their nickname, eg 2/1 or [HHC], etc
-            if (nickParts[i].match(/^(\d\/\d|\[\w+])$/) && !unitPart) {
-                unitPart = nickParts[i] + ' ';
-            }
-
-            // regardless if we found a unit part or not, we should continue on from this iteration
-            if (i === 0) {
-                continue;
-            }
-
-            // assuming the next iterator is iteration i=1 (second index)
-
-            // search for the rank part of their nickname (if it exists) so it can be excluded when updating their nickname
-            // eg SGT. or PVT. etc
-            if (nickParts[i].match(/^(\w|\/){2,3}\.$/)) {
-                namePart = nickParts.slice(i + 1).join(' ');
-            } else {
-                // if we dont find a match to the
-                namePart = nickParts.slice(i).join(' ');
-            }
-
-            break;
-        }
-
-        await guildMember.setNickname(`${unitPart + rankRole.name}. ${namePart}`);
-    } else {
-        await guildMember.setNickname(`${rankRole.name}. ${guildMember.user.username}`);
-    }
-};
+const {setNickName} = require('../util/user');
 
 module.exports = async (interaction) => {
-    const RANK_ROLE_IDS = process.env.RANK_ROLE_IDS.split(',');
-    const targetMember = await interaction.options.get('member').member;
+    // rank of sender
+    const senderRankRole = getMemberRankRole(interaction.member);
 
+    if (!senderRankRole) {
+        return interaction.reply({
+            content  : 'You do not have permissions to execute this command',
+            ephemeral: true
+        });
+    }
+
+    const targetMember = await interaction.options.get('member').member;
     const targetIsProcessing = isProcessing(targetMember);
     const targetIsRecruit = isRecruit(targetMember);
 
-    // handle moving guild member from processing status to recruit status
+    // PROCESSING -> RECRUIT
     if (targetIsProcessing) {
         const dividerRoles = getDividerRoles(interaction.guild);
-        const OTHER_ROLES_DIVIDER_ROLE = dividerRoles.find((role) => role.name.includes('OTHER ROLES'));
+        const otherRolesDividerRole = dividerRoles.find((role) => role.name.includes('OTHER ROLES'));
 
         // add OTHER ROLES divider role
-        if (!targetMember.roles.cache.has(OTHER_ROLES_DIVIDER_ROLE.id)) {
-            await targetMember.roles.add(OTHER_ROLES_DIVIDER_ROLE);
+        if (!targetMember.roles.cache.has(otherRolesDividerRole.id)) {
+            await targetMember.roles.add(otherRolesDividerRole);
         }
+
+        const RANK_ROLE_IDS = process.env.RANK_ROLE_IDS.split(',');
+        const rctRole = interaction.guild.roles.cache.get(RANK_ROLE_IDS[0]);
 
         // add RECRUIT role
         if (!targetMember.roles.cache.has(process.env.RECRUIT_ROLE_ID)) {
             const recruitRole = getRecruitRole(interaction.guild);
             await targetMember.roles.add(recruitRole);
-        }
-
-        // add RCT role
-        if (!targetMember.roles.cache.has(RANK_ROLE_IDS[0])) {
-            const rctRole = interaction.guild.roles.cache.get(RANK_ROLE_IDS[0]);
             await targetMember.roles.add(rctRole);
-            await targetMember.setNickname(`${rctRole.name}. ${targetMember.displayName}`);
         }
 
         // remove PROCESSING role
@@ -79,20 +42,15 @@ module.exports = async (interaction) => {
             await targetMember.roles.remove(processingRole);
         }
 
-        // send reply
+        await setNickName(targetMember);
+
         return interaction.reply({
-            content  : `${targetMember} has been promoted to RCT.`,
+            content  : `${targetMember} has been promoted to ${rctRole.name}.`,
             ephemeral: true
         });
     }
 
-    // rank of the promoter
-    const senderRankRole = getMemberRankRole(interaction.member);
-
-    // rank of the member being promoted
     const targetRankRole = getMemberRankRole(targetMember);
-
-    // the rank the target is being promoted to
     const targetNextRankRole = getNextMemberRankRole(targetMember);
 
     // make sure there is another rank to promote the member to
@@ -110,30 +68,6 @@ module.exports = async (interaction) => {
             ephemeral: true
         });
     }
-
-    // add next rank, remove current rank
-    await targetMember.roles.remove(targetRankRole);
-    await targetMember.roles.add(targetNextRankRole);
-
-    // handle moving guild member from recruit to member
-    if (targetIsRecruit) {
-        // remove recruit role
-        const recruitRole = getRecruitRole(interaction.guild);
-        await targetMember.roles.remove(recruitRole);
-
-        // add member role
-        const memberRole = getMemberRole(interaction.guild);
-        await targetMember.roles.add(memberRole);
-
-        // send reply
-        return interaction.reply({
-            content  : `${targetMember} has been promoted to ${targetNextRankRole.name}.`,
-            ephemeral: true
-        });
-    }
-
-    // update nickname
-    await setNickName(targetMember);
 
     interaction.defer({ephemeral: true})
         .then(async () => {
@@ -170,10 +104,9 @@ module.exports = async (interaction) => {
                             const PROMOTION_OUTPUT_CHANNEL_ID = process.env.PROMOTION_OUTPUT_CHANNEL_ID;
                             const promotionOutputChannel = interaction.guild.channels.cache.get(PROMOTION_OUTPUT_CHANNEL_ID);
                             const targetPlatoonRole = getMemberPlatoonRole(targetMember);
+                            const tag = targetPlatoonRole ? '<@&' + targetPlatoonRole.id + '>' : '@everyone';
 
-                            if (targetPlatoonRole) {
-                                responseText = '<@&' + targetPlatoonRole.id + '>,\n\n' + responseText;
-                            }
+                            responseText = tag + ',\n\n' + responseText;
 
                             await promotionOutputChannel.send(responseText);
                             await interaction.editReply(`${targetMember} has been promoted to ${targetNextRankRole.name}.`);
@@ -181,6 +114,22 @@ module.exports = async (interaction) => {
 
                             await dmChannel.delete();
                             messageCollector.stop();
+
+                            // RECRUIT -> MEMBER
+                            if (targetIsRecruit) {
+                                // remove recruit role
+                                const recruitRole = getRecruitRole(interaction.guild);
+                                await targetMember.roles.remove(recruitRole);
+
+                                // add member role
+                                const memberRole = getMemberRole(interaction.guild);
+                                await targetMember.roles.add(memberRole);
+                            }
+
+                            // add next rank, remove current rank
+                            await targetMember.roles.remove(targetRankRole);
+                            await targetMember.roles.add(targetNextRankRole);
+                            await setNickName(targetMember);
 
                             break;
                         }
