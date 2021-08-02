@@ -79,7 +79,19 @@ module.exports = async (interaction) => {
                 filter: (message) => (message.author.id === interaction.user.id)
             });
 
+            /**
+             * Flag that sets a state of 'proof reading' so the bot will ignore any additional messages sent to it in this mode.
+             * For example, if they submit the reasons for promotion, and then happen to send another message, we just ignore it
+             * and we wait for them to react to the previous proof reading message.
+             * @type {boolean}
+             */
+            let proofing = false;
+
             messageCollector.on('collect', async (message) => {
+                if (proofing) {
+                    return;
+                }
+
                 const today = new Date();
                 const promotionDate = today.getDate() + today.toLocaleString('default', {month: 'short'}).toUpperCase() + today.getFullYear();
 
@@ -91,6 +103,8 @@ module.exports = async (interaction) => {
 
                 await responseMessage.react('👍');
                 await responseMessage.react('👎');
+
+                proofing = true;
 
                 const reactionCollector = responseMessage.createReactionCollector({
                     filter: (reaction, user) => user.id === interaction.user.id
@@ -137,6 +151,7 @@ module.exports = async (interaction) => {
                         case '👎': {
                             reactionCollector.stop();
 
+                            await reaction.message.delete();
                             await dmChannel.send(instructionText);
                             break;
                         }
@@ -144,6 +159,8 @@ module.exports = async (interaction) => {
                         default:
                             await dmChannel.send('Why would you do this? You\'re breakin my heart');
                     }
+
+                    proofing = false;
                 });
             });
         });
