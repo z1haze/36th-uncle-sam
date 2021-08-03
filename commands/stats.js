@@ -199,7 +199,7 @@ module.exports = async (interaction) => {
             fs.unlinkSync(filePath);
 
             await interaction.editReply({
-                content: `**For your full stats, visit: <${encodedUrl}>**`,
+                content: `**For all stats, visit: <${encodedUrl}>**`,
                 files  : [attachment]
             });
         }
