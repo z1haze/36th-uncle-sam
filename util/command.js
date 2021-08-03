@@ -24,6 +24,10 @@ module.exports = {
                         return require('../commands/edit')(interaction);
                     case 'promote':
                         return require('../commands/promote')(interaction);
+                    case 'query':
+                        return require('../commands/query')(interaction);
+                    case 'stats':
+                        return require('../commands/stats')(interaction);
                 }
             }
         });

@@ -12,10 +12,9 @@ What It Does
 - [x] Send messages to channel as Bot
 - [x] Edit messages sent via the Bot
 - [x] Dump full contents of a message to you in a DM
-- [x] Image attachment via URL
 - [x] Clear chat messages
 - [x] Render player stats for bfv
-- [x] Promote members to their next rank
+- [x] Promote members
 
 Usage Overview
 ---
@@ -29,9 +28,9 @@ Usage Overview
 * [`/dump`](docs/commands/dump.md) - DM the sender with the content of a message
 * [`/echo`](docs/commands/echo.md) - Send messages via the bot
 * [`/edit`](docs/commands/edit.md) - Edit a bot message with new content
-* [`~image`](docs/commands/echo.md) - Send image attachments via the bot
-* [`~bfvstats`](docs/commands/bfvstats.md) - Get BFV stats for a player
-* [`~promote`](docs/commands/promote.md) - Handles promoting a member to the next rank
+* [`/promote`](docs/commands/promote.md) - Handles promoting a member
+* [`/stats`](docs/commands/stats.md) - Get BFV stats for a player
+* [`/query`](docs/commands/query.md) - Query members to get analytical data about them
 
 #### Configuration
 
