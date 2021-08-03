@@ -1,4 +1,4 @@
-const {isMember, isValidCompanyRole, isValidPlatoonRole, isValidSquadRole, getMemberCompanyRole, getMemberPlatoonRole, getMemberSquadRole} = require('../util/role');
+const {isRecruit, isMember, isValidCompanyRole, isValidPlatoonRole, isValidSquadRole, getMemberCompanyRole, getMemberPlatoonRole, getMemberSquadRole, getDividerRole} = require('../util/role');
 const {setNickName} = require('../util/user');
 
 module.exports = (interaction) => {
@@ -7,7 +7,7 @@ module.exports = (interaction) => {
     const platoon = interaction.options.getRole('platoon');
     const squad = interaction.options.getRole('squad');
 
-    if (!isMember(member)) {
+    if (!isMember(member) && !isRecruit(member)) {
         return interaction.reply({
             content  : `Transfer failed. ${member} is not a member`,
             ephemeral: true
@@ -73,6 +73,24 @@ module.exports = (interaction) => {
 
     interaction.defer({ephemeral: true})
         .then(async () => {
+            let dividerRole = getDividerRole(member.guild, 'COMPANY');
+
+            if (!member.roles.cache.has(dividerRole.id)) {
+                await member.roles.add(dividerRole);
+            }
+
+            dividerRole = getDividerRole(member.guild, 'PLATOON');
+
+            if (!member.roles.cache.has(dividerRole.id)) {
+                await member.roles.add(dividerRole);
+            }
+
+            dividerRole = getDividerRole(member.guild, 'SQUAD');
+
+            if (!member.roles.cache.has(dividerRole.id)) {
+                await member.roles.add(dividerRole);
+            }
+
             try {
                 await transferRole(member, 'COMPANY', company);
                 await transferRole(member, 'PLATOON', platoon);

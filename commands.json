@@ -17,6 +17,24 @@
       ]
     },
     {
+      "name": "nickname",
+      "description": "Set the nickname for a member,",
+      "options": [
+        {
+          "type": "USER",
+          "name": "member",
+          "description": "The member who's nickname will be set",
+          "required": true
+        },
+        {
+          "type": "STRING",
+          "name": "nickname",
+          "description": "The member's new nickname",
+          "required": true
+        }
+      ]
+    },
+    {
       "name": "echo",
       "description": "Have the bot send a message to the current channel",
       "options": [

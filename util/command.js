@@ -30,6 +30,8 @@ module.exports = {
                         return require('../commands/query')(interaction);
                     case 'stats':
                         return require('../commands/stats')(interaction);
+                    case 'nickname':
+                        return require('../commands/nickname')(interaction);
                 }
             }
         });

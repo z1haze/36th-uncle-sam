@@ -22,6 +22,19 @@ const getDividerRoles = (guild) => {
 };
 
 /**
+ * Get a specific divider role
+ *
+ * @param guild {Guild}
+ * @param identifier {String}
+ * @returns {Role|null}
+ */
+const getDividerRole = (guild, identifier) => {
+    const dividerRoles = getDividerRoles(guild);
+
+    return dividerRoles.find((role) => role.name.includes(identifier));
+};
+
+/**
  * Helper to get the in processing role
  *
  * @param guild {Guild}
@@ -267,6 +280,7 @@ const isRecruit = (guildMember) => {
 
 module.exports = {
     getDividerRoles,
+    getDividerRole,
     getProcessingRole,
     getRecruitRole,
     getMemberRole,
