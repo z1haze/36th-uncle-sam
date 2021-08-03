@@ -31,15 +31,3 @@ Usage Overview
 * [`/promote`](docs/commands/promote.md) - Handles promoting a member
 * [`/stats`](docs/commands/stats.md) - Get BFV stats for a player
 * [`/query`](docs/commands/query.md) - Query members to get analytical data about them
-
-#### Configuration
-
-#### `.env`
-
-```
-NODE_ENV=
-SENTRY_DSN=
-BOT_TOKEN=
-DM_BOT_CHANNELS=
-BFV_STATS_CHANNELS=
-```
