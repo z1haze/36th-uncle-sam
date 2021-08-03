@@ -168,6 +168,36 @@
       ]
     },
     {
+      "name": "transfer",
+      "description": "Handle transferring to new squad/company, etc",
+      "options": [
+        {
+          "type": "USER",
+          "name": "member",
+          "description": "The member being transferred",
+          "required": true
+        },
+        {
+          "type": "ROLE",
+          "name": "company",
+          "description": "The member's new company",
+          "required": true
+        },
+        {
+          "type": "ROLE",
+          "name": "platoon",
+          "description": "The member's new platoon",
+          "required": true
+        },
+        {
+          "type": "ROLE",
+          "name": "squad",
+          "description": "The member's new squad",
+          "required": true
+        }
+      ]
+    },
+    {
       "name": "query",
       "description": "Process various analytical queries",
       "options": [

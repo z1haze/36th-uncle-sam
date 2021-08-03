@@ -1,46 +1,55 @@
-const {getMemberRankRole} = require('./role');
+const {getMemberRankRole, getMemberSquadRole} = require('./role');
 
 module.exports = {
     setNickName: async (guildMember) => {
         guildMember = await guildMember.fetch(); // force update the member
         const rankRole = getMemberRankRole(guildMember);
+        const squadRole = getMemberSquadRole(guildMember);
 
         // give a new nickname
         // example nickname: 2/1 SGT. PERSONS
+        // example nickname: 2.1 BCo. SGT. PERSONS
         if (guildMember.nickname) {
-            const nickParts = guildMember.nickname.split(' ');
+            let nickname = guildMember.nickname;
 
-            let unitPart = '';
-            let namePart = '';
+            // extract the unit identifiers from their current nick, eg [HHC] or 2/1, or 2.1 BCo., etc
+            let unitPart = guildMember.nickname.match(/^(\[[A-Z]{3}]|\d\/\d(\s[A-Z]Co\.?)?)/);
 
-            for (let i = 0; i < nickParts.length; i++) {
-                // search for the unit part of their nickname, eg 2/1 or [HHC], etc
-                if (nickParts[i].match(/^(\d\/\d|\[\w+])$/) && !unitPart) {
-                    unitPart = nickParts[i] + ' ';
-                }
-
-                // regardless if we found a unit part or not, we should continue on from this iteration
-                if (i === 0) {
-                    continue;
-                }
-
-                // assuming the next iterator is iteration i=1 (second index)
-
-                // search for the rank part of their nickname (if it exists) so it can be excluded when updating their nickname
-                // eg SGT. or PVT. etc
-                if (nickParts[i].match(/^(\w|\/){2,3}\.$/)) {
-                    namePart = nickParts.slice(i + 1).join(' ');
-                } else {
-                    // if we dont find a match to the
-                    namePart = nickParts.slice(i).join(' ');
-                }
-
-                break;
+            // extract the unit part
+            if (unitPart.length) {
+                unitPart = unitPart[0];
+                nickname = nickname.replace(unitPart, '').trim();
             }
 
-            await guildMember.setNickname(`${unitPart + rankRole.name}. ${namePart}`);
+            // eg SGT. or PVT. etc
+            let rankPart = nickname.match(/^\w{3}\./);
+
+            // extract the rank part
+            if (rankPart.length) {
+                rankPart = rankPart[0];
+                nickname = nickname.replace(rankPart, '').trim();
+            }
+
+            /**
+             * By this point, we should be left with only the name of the person
+             */
+
+            const squadRole = getMemberSquadRole(guildMember);
+
+            // if they are assigned to a squad, that should be their unit part
+            if (squadRole) {
+                unitPart = squadRole.name + '.';
+            }
+
+            await guildMember.setNickname(`${unitPart} ${rankRole.name}. ${nickname}`);
         } else {
-            await guildMember.setNickname(`${rankRole.name}. ${guildMember.user.username}`);
+            let nick = `${rankRole.name}. ${guildMember.user.username}`;
+
+            if (squadRole) {
+                nick = `${squadRole.name}. ${nick}`;
+            }
+
+            await guildMember.setNickname(nick);
         }
     }
 };
