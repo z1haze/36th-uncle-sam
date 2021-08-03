@@ -2,11 +2,13 @@
   "commands": [
     {
       "name": "ping",
-      "description": "Bot, are you alive?"
+      "description": "Bot, are you alive?",
+      "defaultPermission": true
     },
     {
       "name": "dump",
       "description": "Have the bot DM you the raw contents of a message,",
+      "defaultPermission": false,
       "options": [
         {
           "type": "STRING",
@@ -19,6 +21,7 @@
     {
       "name": "nickname",
       "description": "Set the nickname for a member,",
+      "defaultPermission": false,
       "options": [
         {
           "type": "USER",
@@ -37,6 +40,7 @@
     {
       "name": "echo",
       "description": "Have the bot send a message to the current channel",
+      "defaultPermission": false,
       "options": [
         {
           "type": "STRING",
@@ -49,6 +53,7 @@
     {
       "name": "edit",
       "description": "Edit a message previously sent by the bot",
+      "defaultPermission": false,
       "options": [
         {
           "type": "STRING",
@@ -67,6 +72,7 @@
     {
       "name": "clear",
       "description": "Delete messages in the current channel",
+      "defaultPermission": false,
       "options": [
         {
           "type": "STRING",
@@ -90,6 +96,7 @@
     {
       "name": "reaction",
       "description": "Bot, react to this post!",
+      "defaultPermission": false,
       "options": [
         {
           "type": "SUB_COMMAND",
@@ -134,6 +141,7 @@
     {
       "name": "dm",
       "description": "Send a DM to specific users/roles",
+      "defaultPermission": false,
       "options": [
         {
           "type": "STRING",
@@ -176,6 +184,7 @@
     {
       "name": "promote",
       "description": "Handle promotion of a member through the natural rank order",
+      "defaultPermission": false,
       "options": [
         {
           "type": "USER",
@@ -188,6 +197,7 @@
     {
       "name": "transfer",
       "description": "Handle transferring to new squad/company, etc",
+      "defaultPermission": false,
       "options": [
         {
           "type": "USER",
@@ -218,6 +228,7 @@
     {
       "name": "query",
       "description": "Process various analytical queries",
+      "defaultPermission": false,
       "options": [
         {
           "type": "SUB_COMMAND",
@@ -237,6 +248,7 @@
     {
       "name": "stats",
       "description": "Process various analytical queries",
+      "defaultPermission": true,
       "options": [
         {
           "type": "STRING",

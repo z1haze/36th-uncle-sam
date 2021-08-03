@@ -1,3 +1,6 @@
 module.exports = (interaction) => {
-    return interaction.reply('Pong');
+    return interaction.reply({
+        content  : 'Pong',
+        ephemeral: true
+    });
 };
