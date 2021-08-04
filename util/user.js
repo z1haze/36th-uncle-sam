@@ -19,23 +19,24 @@ module.exports = {
         // example nickname: 2.1 BCo. SGT. PERSONS
         if (guildMember.nickname) {
             let nickname = guildMember.nickname;
-
-            // examples:
-            // 1/1
-            // 1/1 DCo.
-            // 1/1 DCo
-            // [HHC]
-            let unitPart = guildMember.nickname.match(/^(\[[A-Z]{3}]|\d\/\d(\s[A-Z]Co\.?)?)/);
+            let unitPart = '';
 
             // extract the unit part
-            if (unitPart && unitPart.length) {
-                nickname = nickname.replace(unitPart[0], '').trim();
+            if (memberIsHHC) {
+                unitPart = '[HHC]';
+                nickname = nickname.replace(unitPart, '').trim();
+            } else {
+                unitPart = guildMember.nickname.match(/^(\[[A-Z]{3}]|\d\/\d(\s[A-Z]Co\.?)?)/);
+
+                if (unitPart && unitPart.length) {
+                    nickname = nickname.replace(unitPart[0], '').trim();
+                }
             }
 
+            // extract the rank part
             // eg SGT. or PVT. etc
             const rankPart = nickname.match(/^\w{3}\./);
 
-            // extract the rank part
             if (rankPart && rankPart.length) {
                 nickname = nickname.replace(rankPart[0], '').trim();
             }
@@ -44,16 +45,16 @@ module.exports = {
              * By this point, we should be left with only the nickname of the member
              */
 
-            if (memberIsHHC) {
-                unitPart = '[HHC]';
-            } else if (squadRole) {
+            if (!memberIsHHC && squadRole) {
                 unitPart = squadRole.name + '.';
             }
 
+            // add rank to nick
             if (rankRole) {
                 nickname = `${rankRole.name}. ${nickname}`;
             }
 
+            // add unit to nick
             if (unitPart) {
                 nickname = `${unitPart} ${nickname}`;
             }
@@ -62,7 +63,9 @@ module.exports = {
         } else {
             let nickname = `${rankRole.name}. ${guildMember.user.username}`;
 
-            if (squadRole) {
+            if (memberIsHHC) {
+                nickname = `[HHC] ${nickname}`;
+            } else if (squadRole) {
                 nickname = `${squadRole.name}. ${nickname}`;
             }
 
