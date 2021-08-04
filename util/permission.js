@@ -19,13 +19,13 @@ const setCommandsPermissions = async (commandManager) => {
                 await command.permissions.set({permissions: [ncoCorpPermission, officerCorePermission]});
                 break;
 
-            case 'dm':
             case 'promote':
             case 'reaction':
             case 'query':
                 await command.permissions.set({permissions: [officerCorePermission]});
                 break;
 
+            case 'dm':
             case 'dump':
             case 'echo':
             case 'edit':
