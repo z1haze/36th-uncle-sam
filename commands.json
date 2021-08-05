@@ -276,8 +276,8 @@
         },
         {
           "type": "STRING",
-          "name": "player",
-          "description": "The player tag/identifer",
+          "name": "gamertag",
+          "description": "The player's GamerTag",
           "required": true
         }
       ]
