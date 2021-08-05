@@ -115,15 +115,9 @@ const isRoleWithinGroup = (guild, role, identifier) => {
         return false;
     }
 
-    console.log(identifier);
-    console.log(role.name);
-    console.log(role.name.charCodeAt(0));
-
-    if (role.name.charCodeAt(0) === 8291) {
+    if (role.name.includes('\u{2063}')) {
         return false;
     }
-
-    console.log('passed');
 
     const dividerRoles = getDividerRoles(guild);
 
