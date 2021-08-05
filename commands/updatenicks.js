@@ -20,7 +20,7 @@ module.exports = (interaction) => {
             members.each((member) => promises.push(setNickName(member)));
 
             Promise.all(promises)
-                .then(() => interaction.editReply(`Updated nicknames for ${members.size()}`));
+                .then(() => interaction.editReply(`Updated nicknames for ${members.size}`));
         })
         .catch((e) => interaction.editReply(e.message));
 
