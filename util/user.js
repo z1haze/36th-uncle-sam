@@ -60,7 +60,7 @@ module.exports = {
             }
 
             await guildMember.setNickname(nickname)
-                .catch((e) => console.log(`${guildMember.nickname} - ${e.message}`));
+                .catch((e) => console.log(`${guildMember.nickname} - ${nickname} - ${e.message}`));
         } else {
             let nickname = guildMember.user.username;
 
@@ -75,7 +75,7 @@ module.exports = {
             }
 
             await guildMember.setNickname(nickname)
-                .catch((e) => console.log(`${guildMember.nickname} - ${e.message}`));
+                .catch((e) => console.log(`${guildMember.nickname} - ${nickname} - ${e.message}`));
         }
     }
 };
