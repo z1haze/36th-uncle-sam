@@ -39,6 +39,13 @@ const setCommandsPermissions = async (commandManager) => {
                             };
                         })
                 });
+                break;
+            case 'updatenicks':
+                await command.permissions.set({permissions: [{
+                    id        : process.env.IT_SPECIALIST_ROLE_ID,
+                    type      : 'ROLE',
+                    permission: true
+                }]});
         }
     });
 };

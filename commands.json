@@ -281,6 +281,19 @@
           "required": true
         }
       ]
+    },
+    {
+      "name": "updatenicks",
+      "description": "Update nicknames for everyone on the server YOLO",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "BOOLEAN",
+          "name": "onlineonly",
+          "description": "Only update nicknames of online members",
+          "required": true
+        }
+      ]
     }
   ]
 }

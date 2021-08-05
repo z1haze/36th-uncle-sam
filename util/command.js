@@ -34,6 +34,8 @@ module.exports = {
                         return require('../commands/stats')(interaction);
                     case 'nickname':
                         return require('../commands/nickname')(interaction);
+                    case 'updatenicks':
+                        return require('../commands/updatenicks')(interaction);
                 }
             }
         });
