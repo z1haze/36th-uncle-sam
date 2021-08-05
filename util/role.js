@@ -115,10 +115,7 @@ const isRoleWithinGroup = (guild, role, identifier) => {
         return false;
     }
 
-    // hidden space roles should not be included
-    console.log(role.name);
-
-    if (role.name.includes('\u{2063}')) {
+    if (role.name.charCodeAt(0) === 8291) {
         return false;
     }
 
