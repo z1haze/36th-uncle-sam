@@ -115,6 +115,11 @@ const isRoleWithinGroup = (guild, role, identifier) => {
         return false;
     }
 
+    // hidden space roles should not be included
+    if (role.name.includes(' ')) {
+        return false;
+    }
+
     const dividerRoles = getDividerRoles(guild);
 
     // sort roles from top to bottom
