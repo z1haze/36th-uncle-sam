@@ -61,7 +61,11 @@ module.exports = {
 
             await guildMember.setNickname(nickname);
         } else {
-            let nickname = `${rankRole.name}. ${guildMember.user.username}`;
+            let nickname = guildMember.user.username;
+
+            if (rankRole) {
+                nickname = `${rankRole.name}. ${nickname}`;
+            }
 
             if (memberIsHHC) {
                 nickname = `[HHC] ${nickname}`;
