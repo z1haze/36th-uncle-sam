@@ -117,6 +117,10 @@ const isRoleWithinGroup = (guild, role, identifier) => {
 
     const dividerRoles = getDividerRoles(guild);
 
+    if (dividerRoles.has(role.id)) {
+        return false;
+    }
+
     // sort roles from top to bottom
     const sortedRoles = guild.roles.cache
         .sort((roleA, roleB) => roleB.position - roleA.position);
