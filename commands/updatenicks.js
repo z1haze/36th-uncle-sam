@@ -5,8 +5,6 @@ module.exports = (interaction) => {
 
     interaction.defer({ephemeral: true})
         .then(async () => {
-            await interaction.guild.members.fetch();
-
             let members = null;
 
             if (onlineOnly) {
