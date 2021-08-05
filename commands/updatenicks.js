@@ -6,9 +6,9 @@ module.exports = (interaction) => {
     let members = null;
 
     if (onlineOnly) {
-        members = interaction.guild.members.filter((member) => member.presence.status === 'online');
+        members = interaction.guild.members.cache.filter((member) => member.presence.status === 'online');
     } else {
-        members = interaction.guild.members;
+        members = interaction.guild.members.cache;
     }
 
     const promises = [];
