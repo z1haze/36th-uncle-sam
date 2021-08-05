@@ -38,6 +38,14 @@ module.exports = async (interaction) => {
     }
 
     const targetMember = interaction.options.getMember('member');
+
+    if (!targetMember.manageable) {
+        return interaction.reply({
+            content  : `${targetMember} cannot be managed.`,
+            ephemeral: true
+        });
+    }
+
     const targetIsProcessing = isProcessing(targetMember);
     const targetIsRecruit = isRecruit(targetMember);
 

@@ -7,6 +7,13 @@ module.exports = (interaction) => {
     const platoon = interaction.options.getRole('platoon');
     const squad = interaction.options.getRole('squad');
 
+    if (!member.manageable) {
+        return interaction.reply({
+            content  : `${member} cannot be managed.`,
+            ephemeral: true
+        });
+    }
+
     if (!isMember(member) && !isRecruit(member)) {
         return interaction.reply({
             content  : `Transfer failed. ${member} is not a member`,

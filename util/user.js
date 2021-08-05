@@ -69,8 +69,7 @@ module.exports = {
                 nickname = `${unitPart} ${nickname}`;
             }
 
-            await guildMember.setNickname(nickname)
-                .catch((e) => console.log(`${guildMember.nickname} - ${nickname} - ${e.message}`));
+            await guildMember.setNickname(nickname);
         } else {
             let nickname = guildMember.user.username;
 
@@ -84,8 +83,7 @@ module.exports = {
                 nickname = `${squadRole.name}. ${nickname}`;
             }
 
-            await guildMember.setNickname(nickname)
-                .catch((e) => console.log(`${guildMember.nickname} - ${nickname} - ${e.message}`));
+            await guildMember.setNickname(nickname);
         }
     }
 };

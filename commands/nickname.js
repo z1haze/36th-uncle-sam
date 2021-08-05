@@ -4,11 +4,18 @@ module.exports = async (interaction) => {
     const member = interaction.options.getMember('member');
     const nickname = interaction.options.get('nickname');
 
+    if (!member.manageable) {
+        return interaction.reply({
+            content  : `${member} cannot be managed.`,
+            ephemeral: true
+        });
+    }
+
     return interaction.defer({ephemeral: true})
         .then(async () => {
-            await member.setNickname(nickname.value);
-            await setNickName(member);
-
-            return interaction.editReply(`${member}'s nickname has been updated.`);
+            return member.setNickname(nickname.value)
+                .then(() => setNickName(member))
+                .then(() => interaction.editReply(`${member}'s nickname has been updated.`))
+                .catch((e) => interaction.editReply(e.message));
         });
 };

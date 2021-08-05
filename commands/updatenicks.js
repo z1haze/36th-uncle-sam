@@ -15,10 +15,14 @@ module.exports = (interaction) => {
 
             const promises = [];
             
-            members.each((member) => promises.push(setNickName(member)));
+            members.each((member) => {
+                if (member.manageable) {
+                    promises.push(setNickName(member));
+                }
+            });
 
             Promise.all(promises)
-                .then(() => interaction.editReply(`Updated nicknames for ${members.size} members.`));
+                .then(() => interaction.editReply(`Updated nicknames for ${promises.length} members.`));
         })
         .catch((e) => interaction.editReply(e.message));
 
