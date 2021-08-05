@@ -6,13 +6,20 @@ function isMemberHHC (guildMember) {
     return HHC_ROLE_IDS.some((roleId) => guildMember.roles.cache.has(roleId));
 }
 
+function isMemberInactive (guildMember) {
+    return guildMember.roles.cache.has(process.env.ITEM_CO_ROLE_ID);
+}
+
 module.exports = {
     isMemberHHC,
+    isMemberInactive,
     setNickName: async (guildMember) => {
-        guildMember = await guildMember.fetch(); // force update the member
+        guildMember = await guildMember.fetch(); // force update the member, this might not be necessary
+
         const rankRole = getMemberRankRole(guildMember);
         const squadRole = getMemberSquadRole(guildMember);
         const memberIsHHC = isMemberHHC(guildMember);
+        const memberIsInactive = isMemberInactive(guildMember);
 
         // give a new nickname
         // example nickname: 2/1 SGT. PERSONS
@@ -24,6 +31,9 @@ module.exports = {
             // extract the unit part
             if (memberIsHHC) {
                 unitPart = '[HHC]';
+                nickname = nickname.replace(unitPart, '').trim();
+            } else if (memberIsInactive) {
+                unitPart = '[I CO]';
                 nickname = nickname.replace(unitPart, '').trim();
             } else {
                 unitPart = guildMember.nickname.match(/^(\[[A-Z]{3}]|\d\/\d(\s[A-Z]Co\.?)?)/);
@@ -45,7 +55,7 @@ module.exports = {
              * By this point, we should be left with only the nickname of the member
              */
 
-            if (!memberIsHHC && squadRole) {
+            if (!memberIsHHC && !memberIsInactive && squadRole) {
                 unitPart = squadRole.name + '.';
             }
 
