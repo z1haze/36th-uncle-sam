@@ -1,0 +1,299 @@
+{
+  "commands": [
+    {
+      "name": "ping",
+      "description": "Bot, are you alive?",
+      "defaultPermission": true
+    },
+    {
+      "name": "dump",
+      "description": "Have the bot DM you the raw contents of a message,",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "STRING",
+          "name": "messageid",
+          "description": "The id of the message being dumped",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "nickname",
+      "description": "Set the nickname for a member,",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "USER",
+          "name": "member",
+          "description": "The member who's nickname will be set",
+          "required": true
+        },
+        {
+          "type": "STRING",
+          "name": "nickname",
+          "description": "The member's new nickname",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "echo",
+      "description": "Have the bot send a message to the current channel",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "STRING",
+          "name": "message",
+          "description": "the content of the message the bot will echo",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "edit",
+      "description": "Edit a message previously sent by the bot",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "STRING",
+          "name": "messageid",
+          "description": "The id of the message being edited",
+          "required": true
+        },
+        {
+          "type": "STRING",
+          "name": "message",
+          "description": "The message content",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "clear",
+      "description": "Delete messages in the current channel",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "STRING",
+          "name": "timeframe",
+          "description": "How far back to clear the chat - <1h30m10s>",
+          "required": false
+        },
+        {
+          "type": "NUMBER",
+          "name": "limit",
+          "description": "At most, how many messages should be deleted - <100>"
+        },
+        {
+          "type": "MENTIONABLE",
+          "name": "user",
+          "description": "Tag a specific user who\"s messages you wish to filter to - <@someone>",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "reaction",
+      "description": "Bot, react to this post!",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "SUB_COMMAND",
+          "name": "add",
+          "description": "Add a reaction to a message",
+          "options": [
+            {
+              "type": "STRING",
+              "name": "messageid",
+              "description": "The id of the message the bot will react to",
+              "required": true
+            },
+            {
+              "type": "STRING",
+              "name": "reaction",
+              "description": "The emoji that the bot will react with",
+              "required": true
+            }
+          ]
+        },
+        {
+          "type": "SUB_COMMAND",
+          "name": "remove",
+          "description": "Remove a reaction from a message",
+          "options": [
+            {
+              "type": "STRING",
+              "name": "messageid",
+              "description": "The id of the message the bot will react to",
+              "required": true
+            },
+            {
+              "type": "STRING",
+              "name": "reaction",
+              "description": "The emoji that the bot will react with",
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dm",
+      "description": "Send a DM to specific users/roles",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "STRING",
+          "name": "message",
+          "description": "The content of the message",
+          "required": true
+        },
+        {
+          "type": "MENTIONABLE",
+          "name": "recipient1",
+          "description": "@mentions who should receive the message",
+          "required": true
+        },
+        {
+          "type": "MENTIONABLE",
+          "name": "recipient2",
+          "description": "@mentions who should receive the message",
+          "required": false
+        },
+        {
+          "type": "MENTIONABLE",
+          "name": "recipient3",
+          "description": "@mentions who should receive the message",
+          "required": false
+        },
+        {
+          "type": "MENTIONABLE",
+          "name": "recipient4",
+          "description": "@mentions who should receive the message",
+          "required": false
+        },
+        {
+          "type": "MENTIONABLE",
+          "name": "recipient5",
+          "description": "@mentions who should receive the message",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "promote",
+      "description": "Handle promotion of a member through the natural rank order",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "USER",
+          "name": "member",
+          "description": "The member being promoted",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "transfer",
+      "description": "Handle transferring to new squad/company, etc",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "USER",
+          "name": "member",
+          "description": "The member being transferred",
+          "required": true
+        },
+        {
+          "type": "ROLE",
+          "name": "company",
+          "description": "The member's new company",
+          "required": true
+        },
+        {
+          "type": "ROLE",
+          "name": "platoon",
+          "description": "The member's new platoon",
+          "required": true
+        },
+        {
+          "type": "ROLE",
+          "name": "squad",
+          "description": "The member's new squad",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "query",
+      "description": "Process various analytical queries",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "SUB_COMMAND",
+          "name": "rank",
+          "description": "Query members by rank",
+          "options": [
+            {
+              "type": "ROLE",
+              "name": "role",
+              "description": "The rank role to query",
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stats",
+      "description": "Process various analytical queries",
+      "defaultPermission": true,
+      "options": [
+        {
+          "type": "STRING",
+          "name": "game",
+          "description": "Which game to specify stats for",
+          "required": true,
+          "choices": [
+            {
+              "name": "BFV",
+              "value": "bfv"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "name": "platform",
+          "description": "Which platform to fetch stats from",
+          "required": true,
+          "choices": [
+            {
+              "name": "XBL",
+              "value": "xbl"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "name": "gamertag",
+          "description": "The player's GamerTag",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "updatenicks",
+      "description": "Update nicknames for everyone on the server YOLO",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "BOOLEAN",
+          "name": "onlineonly",
+          "description": "Only update nicknames of online members",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

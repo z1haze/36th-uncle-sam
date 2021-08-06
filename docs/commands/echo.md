@@ -3,7 +3,7 @@
 **[↤ Overview](../README.md)**
 
 ```bash
-~echo <content>
+/echo message: The message that will be sent
 ```
 
 Sends a message to the current channel, authored by the bot.
@@ -12,5 +12,5 @@ Example Usage:
 ---
 
 ```bash
-~echo This message will be sent by the bot
+/echo message: This message will be sent by the bot
 ```

@@ -11,12 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/collection": "^0.2.0",
     "@sentry/node": "^6.2.2",
     "@sentry/tracing": "^6.2.2",
-    "discord.js": "^12.5.1",
+    "discord.js": "^13.0.0-dev.d310e4f.1627560163",
     "dotenv": "^8.2.0",
     "got": "^11.8.2",
     "jsdom": "^16.5.1",
+    "moment": "^2.29.1",
     "puppeteer": "^5.5.0",
     "uuid": "^8.3.2"
   },

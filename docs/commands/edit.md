@@ -3,14 +3,14 @@
 **[↤ Overview](../README.md)**
 
 ```bash
-~edit <message-id> <content>
+/edit [messageid] [message]
 ```
 
-Edits a bot message with new content
+Have the bot edit a message that itself authored.
 
 Example Usage:
 ---
 
 ```bash
-~edit 796916652766920734 this is the new content
+/edit messageid: 796916652766920734 message: this is the new content
 ```
