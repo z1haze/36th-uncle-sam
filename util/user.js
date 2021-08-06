@@ -36,7 +36,7 @@ async function updateNickname (guildMember) {
 
     // add the member's rank
     if (memberRankRole) {
-        nickname = `${memberSquadRole.name}. ${nickname}`;
+        nickname = `${memberRankRole.name}. ${nickname}`;
     }
 
     // add the member's unit identifier
@@ -48,6 +48,8 @@ async function updateNickname (guildMember) {
         const memberCompanyRole = getMemberCompanyRole(guildMember);
 
         nickname = `${memberCompanyRole.name.substr(0, 1)}Co. ${nickname}`;
+    } else if (memberSquadRole) {
+        nickname = `${memberSquadRole.name}. ${nickname}`;
     }
 
     await guildMember.setNickname(nickname);
