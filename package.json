@@ -11,10 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/collection": "^0.2.0",
     "@sentry/node": "^6.2.2",
     "@sentry/tracing": "^6.2.2",
-    "discord.js": "^13.0.0-dev.d310e4f.1627560163",
+    "discord.js": "^13.0.0",
     "dotenv": "^8.2.0",
     "got": "^11.8.2",
     "jsdom": "^16.5.1",
