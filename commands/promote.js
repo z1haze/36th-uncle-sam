@@ -1,5 +1,5 @@
-const {getDividerRoles, getProcessingRole, isProcessing, isRecruit, getMemberRankRole, getRecruitRole, getMemberRole, getNextMemberRankRole, getMemberPlatoonRole} = require('../util/role');
-const {setNickName} = require('../util/user');
+const {getDividerRoles, getProcessingRole, getMemberRankRole, getRecruitRole, getMemberRole, getNextMemberRankRole, getMemberPlatoonRole} = require('../util/role');
+const {isProcessing, isRecruit, updateNickname} = require('../util/user');
 
 /**
  * Handle promotion of members through various stages. Examples Below
@@ -53,7 +53,7 @@ module.exports = async (interaction) => {
     if (targetIsProcessing) {
         return promoteToRecruit(interaction, targetMember)
             .then(async (rctRole) => {
-                await setNickName(targetMember);
+                await updateNickname(targetMember);
                 await logPromotion(interaction, targetMember);
 
                 return interaction.reply({
@@ -151,7 +151,7 @@ module.exports = async (interaction) => {
                             await targetMember.roles.remove(targetCurrentRankRole);
                             await targetMember.roles.add(targetNextRankRole);
 
-                            await setNickName(targetMember);
+                            await updateNickname(targetMember);
                             await logPromotion(interaction, targetMember);
 
                             break;

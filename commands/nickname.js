@@ -1,4 +1,4 @@
-const {setNickName} = require('../util/user');
+const {updateNickname} = require('../util/user');
 
 module.exports = async (interaction) => {
     const member = interaction.options.getMember('member');
@@ -14,7 +14,7 @@ module.exports = async (interaction) => {
     return interaction.defer({ephemeral: true})
         .then(async () => {
             return member.setNickname(nickname.value)
-                .then(() => setNickName(member))
+                .then(() => updateNickname(member))
                 .then(() => interaction.editReply(`${member}'s nickname has been updated.`))
                 .catch((e) => interaction.editReply(e.message));
         });

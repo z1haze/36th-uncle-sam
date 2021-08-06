@@ -252,36 +252,6 @@ const getMemberSquadRole = (guildMember) => {
     return getVerifiedRole(guildMember, 'SQUAD');
 };
 
-/**
- * Check if the guildMember is a unit member
- *
- * @param guildMember {GuildMember}
- * @returns {*}
- */
-const isMember = (guildMember) => {
-    return guildMember.roles.cache.has(process.env.MEMBER_ROLE_ID);
-};
-
-/**
- * Check if the guildMember is in processing
- *
- * @param guildMember {GuildMember}
- * @returns {*}
- */
-const isProcessing = (guildMember) => {
-    return guildMember.roles.cache.has(process.env.PROCESSING_ROLE_ID);
-};
-
-/**
- * Check if the guildMember is a recruit
- *
- * @param guildMember {GuildMember}
- * @returns {*}
- */
-const isRecruit = (guildMember) => {
-    return guildMember.roles.cache.has(process.env.RECRUIT_ROLE_ID);
-};
-
 module.exports = {
     getDividerRoles,
     getDividerRole,
@@ -295,8 +265,5 @@ module.exports = {
     getMemberSquadRole,
     isValidCompanyRole,
     isValidPlatoonRole,
-    isValidSquadRole,
-    isMember,
-    isProcessing,
-    isRecruit
+    isValidSquadRole
 };

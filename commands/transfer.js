@@ -1,5 +1,5 @@
-const {isRecruit, isMember, isValidCompanyRole, isValidPlatoonRole, isValidSquadRole, getMemberCompanyRole, getMemberPlatoonRole, getMemberSquadRole, getDividerRole} = require('../util/role');
-const {setNickName} = require('../util/user');
+const {isValidCompanyRole, isValidPlatoonRole, isValidSquadRole, getMemberCompanyRole, getMemberPlatoonRole, getMemberSquadRole, getDividerRole} = require('../util/role');
+const {isRecruit, isMember, updateNickname} = require('../util/user');
 
 module.exports = (interaction) => {
     const member = interaction.options.getMember('member');
@@ -102,7 +102,7 @@ module.exports = (interaction) => {
                 await transferRole(member, 'COMPANY', company);
                 await transferRole(member, 'PLATOON', platoon);
                 await transferRole(member, 'SQUAD', squad);
-                await setNickName(member);
+                await updateNickname(member);
             } catch (e) {
                 return interaction.editReply(e.message);
             }

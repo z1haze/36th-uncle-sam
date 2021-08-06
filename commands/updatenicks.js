@@ -1,4 +1,4 @@
-const {setNickName} = require('../util/user');
+const {updateNickname} = require('../util/user');
 
 module.exports = (interaction) => {
     const onlineOnly = interaction.options.getBoolean('onlineonly');
@@ -17,7 +17,7 @@ module.exports = (interaction) => {
             
             members.each((member) => {
                 if (member.manageable) {
-                    promises.push(setNickName(member));
+                    promises.push(updateNickname(member));
                 }
             });
 
