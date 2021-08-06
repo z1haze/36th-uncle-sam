@@ -24,71 +24,30 @@ async function updateNickname (guildMember) {
     const memberRankRole = getMemberRankRole(guildMember);
     const memberSquadRole = getMemberSquadRole(guildMember);
 
-    let nickname = guildMember.nickname || guildMember.user.username;
-    let unitPart = '';
+    let nickname = guildMember.user.username;
 
-    /**
-     * Extract the "unit information" from the existing nickname
-     */
-
-    if (memberIsHHC) {
-        unitPart = '[HHC]';
-    } else if (memberIsCompanyLeadership || memberIsPlatoonLeadership) {
-        const unitMatch = guildMember.nickname.match(/^[A-Z]Co\./);
-
-        if (unitMatch && unitMatch.length) {
-            unitPart = unitMatch[0];
-        }
-    } else if (memberIsInactive) {
-        unitPart = '[I CO]';
-    } else {
-        const unitMatch = guildMember.nickname.match(/^(\[[A-Z]{3}]|\d\/\d(\s[A-Z]Co\.?)?)/);
-
-        if (unitMatch && unitMatch.length) {
-            unitPart = unitMatch[0];
-        }
-    }
-
-    if (unitPart.length) {
-        nickname = nickname.replace(unitPart, '').trim();
+    if (guildMember.nickname) {
+        nickname = guildMember.nickname.match(/^(\d\/\d\s)?(\[(HHC|I\sCO)]\s)?([A-Z]Co\.\s)?(([A-z]|[1-2]){2,3}\.\s)?(.+)/).pop();
     }
 
     /**
-     * Extract the "rank information" from the existing nickname
+     * Working from right to left, we add the nickname additions back in
      */
 
-    const rankPart = nickname.match(/^\w{2,3}\./);
-
-    if (rankPart && rankPart.length) {
-        nickname = nickname.replace(rankPart[0], '').trim();
+    // add the member's rank
+    if (memberRankRole) {
+        nickname = `${memberSquadRole.name}. ${nickname}`;
     }
 
-    /**
-     * By this point, we should be left with only the nickname of the member
-     * Now we can build the parts up to recreate the nickname
-     * Working from right to left, we build the nickname
-     */
-
-    if (
-        !memberIsHHC
-        && !memberIsCompanyLeadership
-        && !memberIsPlatoonLeadership
-        && !memberIsInactive
-        && memberSquadRole
-    ) {
-        unitPart = `${memberSquadRole.name}.`;
+    // add the member's unit identifier
+    if (memberIsInactive) {
+        nickname = `[I CO] ${nickname}`;
+    } else if (memberIsHHC) {
+        nickname = `[HHC] ${nickname}`;
     } else if (memberIsCompanyLeadership || memberIsPlatoonLeadership) {
         const memberCompanyRole = getMemberCompanyRole(guildMember);
 
-        unitPart = `${memberCompanyRole.name.substr(0, 1)}Co.`;
-    }
-
-    if (memberRankRole) {
-        nickname = `${memberRankRole.name}. ${nickname}`;
-    }
-
-    if (unitPart) {
-        nickname = `${unitPart} ${nickname}`;
+        nickname = `${memberCompanyRole.name.substr(0, 1)}Co. ${nickname}`;
     }
 
     await guildMember.setNickname(nickname);
