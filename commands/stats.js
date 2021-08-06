@@ -20,7 +20,7 @@ module.exports = async (interaction) => {
     const platform = interaction.options.get('platform').value;
     const player = interaction.options.get('gamertag').value.toLowerCase();
     const statsUrl = `https://battlefieldtracker.com/${game}/profile/${platform}/${player}/overview`;
-    await interaction.defer();
+    await interaction.deferReply();
 
     let dom;
 

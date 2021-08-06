@@ -78,7 +78,7 @@ module.exports = (interaction) => {
         });
     }
 
-    interaction.defer({ephemeral: true})
+    interaction.deferReply({ephemeral: true})
         .then(async () => {
             let dividerRole = getDividerRole(member.guild, 'COMPANY');
 

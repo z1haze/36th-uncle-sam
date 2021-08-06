@@ -3,7 +3,7 @@ const {updateNickname} = require('../util/user');
 module.exports = (interaction) => {
     const onlineOnly = interaction.options.getBoolean('onlineonly');
 
-    interaction.defer({ephemeral: true})
+    interaction.deferReply({ephemeral: true})
         .then(async () => {
             let members = null;
 

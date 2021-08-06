@@ -81,7 +81,7 @@ module.exports = async (interaction) => {
         });
     }
 
-    interaction.defer({ephemeral: true})
+    interaction.deferReply({ephemeral: true})
         .then(async () => {
             const targetCurrentRankRole = getMemberRankRole(targetMember);
             const dmChannel = await interaction.user.createDM();

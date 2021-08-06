@@ -11,7 +11,7 @@ module.exports = async (interaction) => {
         });
     }
 
-    return interaction.defer({ephemeral: true})
+    return interaction.deferReply({ephemeral: true})
         .then(async () => {
             return member.setNickname(nickname.value)
                 .then(() => updateNickname(member))

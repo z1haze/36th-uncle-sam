@@ -12,7 +12,7 @@ module.exports = async (interaction) => {
         });
     }
 
-    interaction.defer({ephemeral: true})
+    interaction.deferReply({ephemeral: true})
         .then(async () => {
             const subCommand = interaction.options.getSubcommand();
 
