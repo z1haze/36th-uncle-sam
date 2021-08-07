@@ -53,7 +53,7 @@ module.exports = async (interaction) => {
                         });
 
                     membersWithRank = membersWithRank.sort((memberA, memberB) => {
-                        if (memberA.dateOfRank && memberB.dateOfRank) {
+                        if (!memberA.dateOfRank || !memberB.dateOfRank) {
                             return -1;
                         }
 
