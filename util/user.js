@@ -4,6 +4,7 @@ module.exports = {
     isProcessing,
     isMember,
     isRecruit,
+    isInactive,
     updateNickname
 };
 
@@ -19,7 +20,7 @@ async function updateNickname (guildMember) {
     const memberIsHHC = isMemberHHC(guildMember);
     const memberIsCompanyLeadership = isMemberCompanyLeadership(guildMember);
     const memberIsPlatoonLeadership = isMemberPlatoonLeadership(guildMember);
-    const memberIsInactive = isMemberInactive(guildMember);
+    const memberIsInactive = isInactive(guildMember);
 
     const memberRankRole = getMemberRankRole(guildMember);
     const memberSquadRole = getMemberSquadRole(guildMember);
@@ -103,7 +104,7 @@ function isMemberHHC (guildMember) {
  * @param guildMember {GuildMember}
  * @returns {*}
  */
-function isMemberInactive (guildMember) {
+function isInactive (guildMember) {
     return guildMember.roles.cache.has(process.env.ITEM_CO_ROLE_ID);
 }
 

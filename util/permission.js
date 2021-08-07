@@ -41,11 +41,36 @@ const setCommandsPermissions = async (commandManager) => {
                 });
                 break;
             case 'updatenicks':
-                await command.permissions.set({permissions: [{
-                    id        : process.env.IT_SPECIALIST_ROLE_ID,
-                    type      : 'ROLE',
-                    permission: true
-                }]});
+                await command.permissions.set({
+                    permissions: [{
+                        id        : process.env.IT_SPECIALIST_ROLE_ID,
+                        type      : 'ROLE',
+                        permission: true
+                    }]
+                });
+                break;
+            case 'event':
+                await command.permissions.set({
+                    permissions: [
+                        ...process.env.COMPANY_LEADERSHIP_ROLE_IDS.split(',')
+                            .map((roleId) => {
+                                return {
+                                    id        : roleId,
+                                    type      : 'ROLE',
+                                    permission: true
+                                };
+                            }),
+                        ...process.env.PLATOON_LEADERSHIP_ROLE_IDS.split(',')
+                            .map((roleId) => {
+                                return {
+                                    id        : roleId,
+                                    type      : 'ROLE',
+                                    permission: true
+                                };
+                            })
+                    ]
+                });
+                break;
         }
     });
 };

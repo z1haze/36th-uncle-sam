@@ -294,6 +294,18 @@
           "required": true
         }
       ]
+    },
+    {
+      "name": "event",
+      "description": "Manage and create scheduled events",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "SUB_COMMAND",
+          "name": "create",
+          "description": "Create a new scheduled event"
+        }
+      ]
     }
   ]
 }

@@ -1,4 +1,5 @@
 const {Collection, MessageEmbed} = require('discord.js');
+const {isInactive} = require('../util/user');
 const monthNames = ['JAN', 'FED', 'MAR', 'APR', 'MAY', 'JUN',
     'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
@@ -19,7 +20,7 @@ module.exports = async (interaction) => {
             switch (subCommand) {
                 case 'rank': {
                     const rankRole = interaction.options.getRole('role');
-                    const membersWithRank = interaction.guild.members.cache.filter((member) => member.roles.cache.has(rankRole.id));
+                    let membersWithRank = interaction.guild.members.cache.filter((member) => member.roles.cache.has(rankRole.id) && !isInactive(member));
 
                     // 2500 for now is the magic number
                     (await getLotsOfAuditLogs(interaction.guild,'MEMBER_ROLE_UPDATE', Number(process.env.QUERY_RANK_LIMIT)))
@@ -50,6 +51,14 @@ module.exports = async (interaction) => {
                                 });
                             }
                         });
+
+                    membersWithRank = membersWithRank.sort((memberA, memberB) => {
+                        if (memberA.dateOfRank && memberB.dateOfRank) {
+                            return -1;
+                        }
+
+                        return memberA.dateOfRank - memberB.dateOfRank;
+                    });
 
                     const embed = new MessageEmbed()
                         .setColor('#cd1c1c')
