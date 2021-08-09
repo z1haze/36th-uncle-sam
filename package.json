@@ -13,11 +13,11 @@
   "dependencies": {
     "@sentry/node": "^6.2.2",
     "@sentry/tracing": "^6.2.2",
+    "dayjs": "^1.10.6",
     "discord.js": "^13.0.0",
     "dotenv": "^8.2.0",
     "got": "^11.8.2",
     "jsdom": "^16.5.1",
-    "moment": "^2.29.1",
     "puppeteer": "^5.5.0",
     "uuid": "^8.3.2"
   },

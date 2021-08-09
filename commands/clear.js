@@ -1,5 +1,5 @@
 const {getMessages} = require('../util/message');
-const {getTimeAgo} = require('../util/date');
+const {getTimePast} = require('../util/date');
 
 module.exports = async (interaction) => {
     const timeframe = interaction.options.get('timeframe');
@@ -10,7 +10,7 @@ module.exports = async (interaction) => {
 
     // if timeframe is a string
     if (timeframe && isNaN(timeframe.value)) {
-        opts.afterDate = getTimeAgo(timeframe.value);
+        opts.afterDate = getTimePast(timeframe.value);
     }
 
     // if limit is a number

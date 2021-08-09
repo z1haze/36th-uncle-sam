@@ -50,26 +50,34 @@ const setCommandsPermissions = async (commandManager) => {
                 });
                 break;
             case 'event':
+                // while this command is in development, only i can run this shit
                 await command.permissions.set({
-                    permissions: [
-                        ...process.env.COMPANY_LEADERSHIP_ROLE_IDS.split(',')
-                            .map((roleId) => {
-                                return {
-                                    id        : roleId,
-                                    type      : 'ROLE',
-                                    permission: true
-                                };
-                            }),
-                        ...process.env.PLATOON_LEADERSHIP_ROLE_IDS.split(',')
-                            .map((roleId) => {
-                                return {
-                                    id        : roleId,
-                                    type      : 'ROLE',
-                                    permission: true
-                                };
-                            })
-                    ]
+                    permissions: [{
+                        id        : process.env.IT_SPECIALIST_ROLE_ID,
+                        type      : 'ROLE',
+                        permission: true
+                    }]
                 });
+                // await command.permissions.set({
+                //     permissions: [
+                //         ...process.env.COMPANY_LEADERSHIP_ROLE_IDS.split(',')
+                //             .map((roleId) => {
+                //                 return {
+                //                     id        : roleId,
+                //                     type      : 'ROLE',
+                //                     permission: true
+                //                 };
+                //             }),
+                //         ...process.env.PLATOON_LEADERSHIP_ROLE_IDS.split(',')
+                //             .map((roleId) => {
+                //                 return {
+                //                     id        : roleId,
+                //                     type      : 'ROLE',
+                //                     permission: true
+                //                 };
+                //             })
+                //     ]
+                // });
                 break;
         }
     });
