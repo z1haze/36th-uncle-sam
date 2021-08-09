@@ -28,7 +28,7 @@ module.exports = async (interaction) => {
         dom = await JSDOM.fromURL(statsUrl, {runScripts: 'dangerously'});
     } catch (e) {
         if (e.response.statusCode === 404) {
-            return interaction.editReply(`Player "${interaction.options.get('player').value}" found. Check your spelling and try again.`);
+            return interaction.editReply(`Player "${player}" found. Check your spelling and try again.`);
         } else {
             return interaction.editReply('Stats bot broke, tell wiggls!');
         }
