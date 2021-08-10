@@ -32,3 +32,5 @@ Usage Overview
 * [`/stats`](docs/commands/stats.md) - Get BFV stats for a player
 * [`/query`](docs/commands/query.md) - Query members to get analytical data about them
 * [`/nickname`](docs/commands/nickname.md) - Update the gamertag/nickname for a member
+* [`/transfer`](docs/commands/transfer.md) - Facilitate a transfer of a unit member to a different unit
+* [`/event`](docs/commands/event.md) - Create and manage scheduled events

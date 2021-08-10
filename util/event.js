@@ -27,7 +27,7 @@ function watchEvent (message) {
  */
 function watchEvents (guild) {
     getDb().then((db) => {
-        db.each('SELECT * FROM events', (err, row) => {
+        db.each('SELECT * FROM events', async (err, row) => {
             if (err) {
                 throw err;
             }
@@ -37,13 +37,15 @@ function watchEvents (guild) {
                 return;
             }
 
-            guild.channels.fetch(row.channel_id)
-                .then((channel) => {
-                    channel.messages.fetch(row.message_id)
-                        .then((message) => {
-                            watchEvent(message);
-                        });
-                });
+            const channel = await guild.channels.fetch(row.channel_id);
+
+            if (!channel) return;
+
+            const message = await channel.messages.fetch(row.message_id);
+
+            if (message) {
+                watchEvent(message);
+            }
 
         }, () => {
             // eslint-disable-next-line no-console
