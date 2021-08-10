@@ -61,7 +61,12 @@ module.exports = async (interaction) => {
 
                 // description
                 case 1: {
-                    stepValues.push(message.content);
+                    if (message.content.toLowerCase() === 'none') {
+                        stepValues.push('');
+                    } else {
+                        stepValues.push(message.content);
+                    }
+
                     break;
                 }
 
@@ -148,37 +153,39 @@ async function createEvent (channel, values, creator) {
     const start = dayjs(values[2]).tz('America/New_York', true);
     const end = getTimeFuture(values[3], start);
 
-    const message = await channel.send({
-        embeds: [
-            new MessageEmbed()
-                .setColor('#cd1c1c')
-                .setTitle(values[0])
-                .setDescription(values[1] + '\n\n')
-                .addFields(
-                    {
-                        name : 'Time',
-                        value: `${start.format('dddd, MMM D YYYY h:mm a')} - ${end.format('dddd, MMM D YYYY h:mm a')} (EST)\n\n`
-                    },
-                    {
-                        name  : '1️⃣ Attending',
-                        value : '-',
-                        inline: true
-                    },
-                    {
-                        name  : '2️⃣ Tentative',
-                        value : '-',
-                        inline: true
-                    },
-                    {
-                        name  : '3️⃣ Declined',
-                        value : '-',
-                        inline: true
-                    }
-                )
-                .setTimestamp()
-                .setFooter(`Created by ${creator.displayName}`, 'https://thefighting36th.com/img/favicon-16x16.png')
-        ]
-    });
+    const embed = new MessageEmbed()
+        .setColor('#cd1c1c')
+        .setTitle(values[0])
+        .addFields(
+            {
+                name : 'Time',
+                value: `${start.format('dddd, MMM D YYYY h:mm a')} - ${end.format('dddd, MMM D YYYY h:mm a')} (EST)\n\n`
+            },
+            {
+                name  : '1️⃣ Attending',
+                value : '-',
+                inline: true
+            },
+            {
+                name  : '2️⃣ Tentative',
+                value : '-',
+                inline: true
+            },
+            {
+                name  : '3️⃣ Declined',
+                value : '-',
+                inline: true
+            }
+        )
+        .setTimestamp()
+        .setFooter(`Created by ${creator.displayName}`, 'https://thefighting36th.com/img/favicon-16x16.png');
+
+    // only set description if one was provided
+    if (values[1].length) {
+        embed.setDescription(values[1] + '\n\n');
+    }
+
+    const message = await channel.send({embeds: [embed]});
 
     message.react('1️⃣');
     message.react('2️⃣');
