@@ -1,5 +1,7 @@
 const {MessageEmbed} = require('discord.js');
 const {getTimeFuture} = require('../util/date');
+const {watchEvent} = require('../util/event');
+const getDb = require('../util/db');
 
 const dayjs = require('dayjs');
 const utc = require('dayjs/plugin/utc');
@@ -102,27 +104,31 @@ module.exports = async (interaction) => {
         }
     });
 
+    // handle the closing of the message collector, whether that means creating a new event or timing out, or cancelling, etc
     messageCollector.on('end', (collected, reason) => {
         if (reason === 'cancel') {
             dmChannel.send('Event creation has been cancelled.');
-            interaction.editReply('Event creation has been cancelled.');
         } else if (reason === 'idle') {
             dmChannel.send('I\'m not sure where you went. We can try this again later.');
         } else if (reason === 'complete') {
-            sendEvent(interaction.channel, stepValues, interaction.member)
-                .then((message) => {
-                    dmChannel.send({embeds: [
-                        new MessageEmbed()
-                            .setColor('#cd1c1c')
-                            .setTitle('Event has been created!')
-                            .setDescription(`[click here to view the event](${message.url})`)
-                            .setTimestamp()
-                            .setFooter('', 'https://thefighting36th.com/img/favicon-16x16.png')
-                    ]
-                    })
-                        .then(() => interaction.editReply('Event has been created!'));
+            createEvent(interaction.channel, stepValues, interaction.member)
+                .then(async (message) => {
+                    watchEvent(message);
+
+                    await dmChannel.send({
+                        embeds: [
+                            new MessageEmbed()
+                                .setColor('#cd1c1c')
+                                .setTitle('Event has been created!')
+                                .setDescription(`[click here to view the event](${message.url})`)
+                                .setTimestamp()
+                                .setFooter('', 'https://thefighting36th.com/img/favicon-16x16.png')
+                        ]
+                    });
                 });
         }
+
+        interaction.editReply('We\'re done here.');
     });
 
     await dmChannel.send({embeds: [steps[currentStep]]});
@@ -130,33 +136,41 @@ module.exports = async (interaction) => {
     return interaction.editReply('Check your dm.');
 };
 
-async function sendEvent (channel, values, creator) {
+/**
+ * create a new event message in discord
+ *
+ * @param channel
+ * @param values
+ * @param creator
+ * @returns {Promise<*>}
+ */
+async function createEvent (channel, values, creator) {
     const start = dayjs(values[2]).tz('America/New_York', true);
     const end = getTimeFuture(values[3], start);
 
-    return channel.send({
+    const message = await channel.send({
         embeds: [
             new MessageEmbed()
                 .setColor('#cd1c1c')
                 .setTitle(values[0])
-                .setDescription(values[1] + '\n')
+                .setDescription(values[1] + '\n\n')
                 .addFields(
                     {
                         name : 'Time',
-                        value: `${start.format('dddd, MMM D YYYY h:mm a')} - ${end.format('dddd, MMM D YYYY h:mm a')} (EST)`
+                        value: `${start.format('dddd, MMM D YYYY h:mm a')} - ${end.format('dddd, MMM D YYYY h:mm a')} (EST)\n\n`
                     },
                     {
-                        name  : '✅ Attending',
+                        name  : '1️⃣ Attending',
                         value : '-',
                         inline: true
                     },
                     {
-                        name  : '❓ Tentative',
+                        name  : '2️⃣ Tentative',
                         value : '-',
                         inline: true
                     },
                     {
-                        name  : '❌ Declined',
+                        name  : '3️⃣ Declined',
                         value : '-',
                         inline: true
                     }
@@ -164,5 +178,21 @@ async function sendEvent (channel, values, creator) {
                 .setTimestamp()
                 .setFooter(`Created by ${creator.displayName}`, 'https://thefighting36th.com/img/favicon-16x16.png')
         ]
+    });
+
+    message.react('1️⃣');
+    message.react('2️⃣');
+    message.react('3️⃣');
+
+    const db = await getDb();
+
+    return new Promise((resolve, reject) => {
+        db.run(`INSERT INTO events(channel_id,message_id,event_ending) VALUES('${message.channelId}','${message.id}', ${end.valueOf()})`, (err) => {
+            if (err) {
+                reject(err);
+            }
+
+            resolve(message);
+        });
     });
 }

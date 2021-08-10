@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const {Client} = require('discord.js');
 const {registerCommands} = require('./util/command');
+const {watchEvents} = require('./util/event');
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const GUILD_ID = process.env.GUILD_ID;
@@ -9,7 +10,7 @@ const GUILD_ID = process.env.GUILD_ID;
 require('./util/sentry').init();
 
 const client = new Client({
-    intents : ['GUILDS', 'GUILD_PRESENCES', 'GUILD_MEMBERS', 'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS'],
+    intents : ['GUILDS', 'GUILD_PRESENCES', 'GUILD_MEMBERS', 'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS', 'GUILD_MESSAGE_REACTIONS'],
     partials: ['CHANNEL']
 });
 
@@ -28,6 +29,10 @@ client.on('ready', async () => {
 
     // setup commands
     await registerCommands(commandManager);
+
+    // watch events
+    watchEvents(guild);
+
 });
 
 client.login(BOT_TOKEN);
