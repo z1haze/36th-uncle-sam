@@ -26,28 +26,31 @@ module.exports = (interaction) => {
         blocked : 0
     };
 
-    // deliver messages to each member
-    members.forEach((member) => {
-        results.promises.push(member.send(message)
-            .then(() => results.sent++)
-            .catch(async () => {
-                await interaction.channel.send(`${member.user} did not receive the message (bot it probably blocked).`);
-                results.blocked++;
-            })
-        );
-    });
-
-    return Promise.all(results.promises)
+    return interaction.deferReply()
         .then(() => {
-            let output = 'Message sending complete.\n';
+            // deliver messages to each member
+            members.forEach((member) => {
+                results.promises.push(member.send(message)
+                    .then(() => results.sent++)
+                    .catch(async () => {
+                        await interaction.channel.send(`${member.user} did not receive the message (bot it probably blocked).`);
+                        results.blocked++;
+                    })
+                );
+            });
 
-            output += `> Sent to a total of ${results.sent} users\n`;
+            return Promise.all(results.promises)
+                .then(() => {
+                    let output = 'Message sending complete.\n';
 
-            if (results.blocked > 0) {
-                output += '> ' + results.blocked + ' users did not receive a message:\n';
-                output += '> - ' + results.blocked + ' blocked';
-            }
+                    output += `> Sent to a total of ${results.sent} users\n`;
 
-            return interaction.reply(output);
+                    if (results.blocked > 0) {
+                        output += '> ' + results.blocked + ' users did not receive a message:\n';
+                        output += '> - ' + results.blocked + ' blocked';
+                    }
+
+                    return interaction.editReply(output);
+                });
         });
 };
