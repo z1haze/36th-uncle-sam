@@ -26,6 +26,8 @@ module.exports = {
                         return require('../commands/edit')(interaction);
                     case 'promote':
                         return require('../commands/promote')(interaction);
+                    case 'demote':
+                        return require('../commands/demote')(interaction);
                     case 'transfer':
                         return require('../commands/transfer')(interaction);
                     case 'query':

@@ -29,6 +29,7 @@ Usage Overview
 * [`/echo`](docs/commands/echo.md) - Send messages via the bot
 * [`/edit`](docs/commands/edit.md) - Edit a bot message with new content
 * [`/promote`](docs/commands/promote.md) - Handles promoting a member
+* [`/demote`](docs/commands/demote.md) - Handles promoting a member
 * [`/stats`](docs/commands/stats.md) - Get BFV stats for a player
 * [`/query`](docs/commands/query.md) - Query members to get analytical data about them
 * [`/nickname`](docs/commands/nickname.md) - Update the gamertag/nickname for a member
