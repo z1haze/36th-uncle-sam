@@ -83,7 +83,26 @@ const getMemberRankRole = (guildMember) => {
 };
 
 /**
- * Helper to get the next role rank for a unit member
+ * Helper to get the previous rank role for a unit member
+ *
+ * @param guildMember
+ * @returns {null|*}
+ */
+const getPreviousMemberRankRole = (guildMember) => {
+    const currentRankRole = getMemberRankRole(guildMember);
+    const RANK_ROLE_IDS = process.env.RANK_ROLE_IDS.split(',');
+
+    try {
+        const nextRankRoleId = RANK_ROLE_IDS[RANK_ROLE_IDS.indexOf(currentRankRole.id) - 1];
+
+        return guildMember.guild.roles.cache.get(nextRankRoleId);
+    } catch (e) {
+        return null;
+    }
+};
+
+/**
+ * Helper to get the next rank role for a unit member
  *
  * @param guildMember {GuildMember}
  * @returns {Role|null}
@@ -259,6 +278,7 @@ module.exports = {
     getRecruitRole,
     getMemberRole,
     getMemberRankRole,
+    getPreviousMemberRankRole,
     getNextMemberRankRole,
     getMemberCompanyRole,
     getMemberPlatoonRole,
