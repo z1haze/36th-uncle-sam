@@ -195,6 +195,19 @@
       ]
     },
     {
+      "name": "demote",
+      "description": "Handle demotion of a member through the natural rank order",
+      "defaultPermission": false,
+      "options": [
+        {
+          "type": "USER",
+          "name": "member",
+          "description": "The member being demoted",
+          "required": true
+        }
+      ]
+    },
+    {
       "name": "transfer",
       "description": "Handle transferring to new squad/company, etc",
       "defaultPermission": false,

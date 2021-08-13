@@ -20,6 +20,7 @@ const setCommandsPermissions = async (commandManager) => {
                 break;
 
             case 'promote':
+            case 'demote':
             case 'reaction':
             case 'query':
                 await command.permissions.set({permissions: [officerCorePermission]});
