@@ -206,11 +206,13 @@ module.exports = (interaction) => {
                 }
             }
         })
+        .catch((e) => {
+            return {
+                content: `An uncaught error occurred: ${e.message}`
+            };
+        })
         .then((opts) => {
             return interaction.editReply(opts);
-        })
-        .then((e) => {
-            return interaction.editReply(`An uncaught error occurred: ${e.message}`);
         });
 
 };
