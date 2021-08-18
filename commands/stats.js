@@ -199,11 +199,18 @@ module.exports = (interaction) => {
 
                     fs.unlinkSync(filePath);
 
-                    await interaction.editReply({
+                    return {
                         content: `**For all stats, visit: <${encodedUrl}>**`,
                         files  : [attachment]
-                    });
+                    };
                 }
             }
+        })
+        .then((opts) => {
+            return interaction.editReply(opts);
+        })
+        .then((e) => {
+            return interaction.editReply(`An uncaught error occurred: ${e.message}`);
         });
+
 };
