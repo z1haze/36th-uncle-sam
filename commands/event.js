@@ -116,7 +116,9 @@ module.exports = async (interaction) => {
         } else if (reason === 'idle') {
             dmChannel.send('I\'m not sure where you went. We can try this again later.');
         } else if (reason === 'complete') {
-            createEvent(interaction.channel, stepValues, interaction.member)
+            const rolesToMention = [interaction.options.getRole('role1'), interaction.options.getRole('role2'), interaction.options.getRole('role3')].filter((r) => r);
+
+            createEvent(interaction.channel, stepValues, interaction.member, rolesToMention)
                 .then(async (message) => {
                     watchEvent(message);
 
@@ -147,9 +149,10 @@ module.exports = async (interaction) => {
  * @param channel
  * @param values
  * @param creator
+ * @param rolesToMention
  * @returns {Promise<*>}
  */
-async function createEvent (channel, values, creator) {
+async function createEvent (channel, values, creator, rolesToMention = []) {
     const start = dayjs(values[2]).tz('America/New_York', true);
     const end = getTimeFuture(values[3], start);
 
@@ -185,7 +188,13 @@ async function createEvent (channel, values, creator) {
         embed.setDescription(values[1] + '\n\n');
     }
 
-    const message = await channel.send({embeds: [embed]});
+    const payload = {embeds: [embed]};
+
+    if (rolesToMention.length) {
+        payload.content = `Attention: ${rolesToMention.join(' ')}`;
+    }
+
+    const message = await channel.send(payload);
 
     message.react('1️⃣');
     message.react('2️⃣');

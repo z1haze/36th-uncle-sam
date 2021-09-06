@@ -316,7 +316,27 @@
         {
           "type": "SUB_COMMAND",
           "name": "create",
-          "description": "Create a new scheduled event"
+          "description": "Create a new scheduled event",
+          "options": [
+            {
+              "name": "role1",
+              "description": "A role to tag",
+              "type": "ROLE",
+              "required": false
+            },
+            {
+              "name": "role2",
+              "description": "A role to tag",
+              "type": "ROLE",
+              "required": false
+            },
+            {
+              "name": "role3",
+              "description": "A role to tag",
+              "type": "ROLE",
+              "required": false
+            }
+          ]
         }
       ]
     }
