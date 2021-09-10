@@ -25,10 +25,11 @@ client.on('ready', async () => {
     await guild.roles.fetch();
     await guild.channels.fetch();
 
-    const commandManager = guild.commands;
+    // sync database
+    await require('./db/sync')(guild);
 
     // setup commands
-    await registerCommands(commandManager);
+    await registerCommands(guild.commands);
 
     // watch events
     watchEvents(guild);
