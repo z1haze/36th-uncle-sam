@@ -40,15 +40,7 @@
     {
       "name": "echo",
       "description": "Have the bot send a message to the current channel",
-      "defaultPermission": false,
-      "options": [
-        {
-          "type": "STRING",
-          "name": "message",
-          "description": "the content of the message the bot will echo",
-          "required": true
-        }
-      ]
+      "defaultPermission": false
     },
     {
       "name": "edit",
