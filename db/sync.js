@@ -7,7 +7,7 @@ module.exports = async (guild) => {
 
     dbMembers.forEach((row) => {
         usersToDelete.add(row.discord_user_id);
-        dbMembersMap.put(row.discord_user_id, row);
+        dbMembersMap.set(row.discord_user_id, row);
     });
 
     guild.members.cache.each(async (guildMember) => {
@@ -31,5 +31,4 @@ module.exports = async (guild) => {
             .delete()
             .whereIn('discord_user_id', Array.from(usersToDelete));
     }
-
 };
