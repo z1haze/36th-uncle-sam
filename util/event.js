@@ -37,11 +37,11 @@ function watchEvents (guild) {
                 return;
             }
 
-            const channel = await guild.channels.fetch(row.channel_id);
+            const channel = await guild.channels.fetch(row.channel_id).catch(() => null);
 
             if (!channel) return;
 
-            const message = await channel.messages.fetch(row.message_id);
+            const message = await channel.messages.fetch(row.message_id).catch(() => null);
 
             if (message) {
                 watchEvent(message);

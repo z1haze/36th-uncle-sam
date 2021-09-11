@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./util/sentry').init();
 
 const {Client} = require('discord.js');
 const {registerCommands} = require('./util/command');
@@ -6,8 +7,6 @@ const {watchEvents} = require('./util/event');
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const GUILD_ID = process.env.GUILD_ID;
-
-require('./util/sentry').init();
 
 const client = new Client({
     intents : ['GUILDS', 'GUILD_PRESENCES', 'GUILD_MEMBERS', 'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS', 'GUILD_MESSAGE_REACTIONS'],
@@ -19,6 +18,10 @@ client.on('ready', async () => {
     console.info(`Logged in as ${client.user.tag}!`);
 
     const guild = client.guilds.cache.get(GUILD_ID);
+
+    if (!guild) {
+        throw new Error(`Incorrect guild id: ${GUILD_ID}`);
+    }
 
     // update caches
     await guild.members.fetch();
@@ -33,7 +36,6 @@ client.on('ready', async () => {
 
     // watch events
     watchEvents(guild);
-
 });
 
 client.login(BOT_TOKEN);
