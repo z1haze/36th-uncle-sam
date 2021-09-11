@@ -11,19 +11,25 @@ const setCommandsPermissions = async (commandManager) => {
         permission: true
     };
 
+    const adminPermission = {
+        id        : process.env.ADMIN_ROLE_ID,
+        type      : 'ROLE',
+        permission: true
+    };
+
     commandManager.cache.each(async (command) => {
         switch (command.name) {
             case 'clear':
             case 'nickname':
             case 'transfer':
-                await command.permissions.set({permissions: [ncoCorpPermission, officerCorePermission]});
+                await command.permissions.set({permissions: [ncoCorpPermission, officerCorePermission, adminPermission]});
                 break;
 
             case 'promote':
             case 'demote':
             case 'reaction':
             case 'query':
-                await command.permissions.set({permissions: [officerCorePermission]});
+                await command.permissions.set({permissions: [officerCorePermission, adminPermission]});
                 break;
 
             case 'dm':
@@ -31,14 +37,14 @@ const setCommandsPermissions = async (commandManager) => {
             case 'echo':
             case 'edit':
                 await command.permissions.set({
-                    permissions: process.env.TOP_TIER_ROLE_IDS.split(',')
+                    permissions: [...process.env.TOP_TIER_ROLE_IDS.split(',')
                         .map((roleId) => {
                             return {
                                 id        : roleId,
                                 type      : 'ROLE',
                                 permission: true
                             };
-                        })
+                        }), adminPermission]
                 });
                 break;
             case 'updatenicks':
@@ -47,12 +53,14 @@ const setCommandsPermissions = async (commandManager) => {
                         id        : process.env.IT_SPECIALIST_ROLE_ID,
                         type      : 'ROLE',
                         permission: true
-                    }]
+                    },
+                    adminPermission]
                 });
                 break;
             case 'event':
                 await command.permissions.set({
                     permissions: [
+                        adminPermission,
                         ...process.env.TOP_TIER_ROLE_IDS.split(',')
                             .map((roleId) => {
                                 return {
