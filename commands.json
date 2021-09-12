@@ -52,12 +52,6 @@
           "name": "messageid",
           "description": "The id of the message being edited",
           "required": true
-        },
-        {
-          "type": "STRING",
-          "name": "message",
-          "description": "The message content",
-          "required": true
         }
       ]
     },

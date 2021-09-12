@@ -1,22 +1,24 @@
-module.exports = (interaction) => {
+const {confirm} = require('../util/dm');
+
+module.exports = async (interaction) => {
+    await interaction.deferReply({ephemeral: true});
+
     const messageId = interaction.options.get('messageid').value;
-    const content = interaction.options.get('message').value;
+    const message = await interaction.channel.messages.fetch(messageId).catch(() => null);
 
-    interaction.channel.messages.fetch(messageId)
-        .then(async (message) => {
-            if (message.author.id === interaction.client.user.id) {
-                await message.edit(content);
+    if (!message) {
+        return interaction.editReply('Message not found in current channel.');
+    }
 
-                return 'Message Edited.';
-            } else {
-                return 'Cannot edit message not authored by bot.';
-            }
-        })
-        .catch((e) => e.message)
-        .then((content) => {
-            return interaction.reply({
-                content,
-                ephemeral: true
-            });
-        });
+    // if the bot is not the message author, it cannot edit the message
+    if (message.author.id !== interaction.client.user.id) {
+        return interaction.editReply('I can only edit my own messages!');
+    }
+
+    const dmChannel = await interaction.user.createDM();
+    await dmChannel.send('Please provide me the updated message.');
+
+    confirm(dmChannel, interaction.user)
+        .then((content) => message.edit(content))
+        .then(() => interaction.editReply('Message updated.'));
 };
