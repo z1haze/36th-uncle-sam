@@ -45,7 +45,8 @@ const setCommandsPermissions = async (commandManager) => {
                                     type      : 'ROLE',
                                     permission: true
                                 };
-                            }), adminPermission
+                            }),
+                        adminPermission
                     ]
                 });
                 break;
