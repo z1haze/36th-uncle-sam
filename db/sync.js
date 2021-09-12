@@ -27,7 +27,7 @@ module.exports = async (guild) => {
 
     // delete all users who still exist in the usersToDelete because we never saw them while iterating over the live results
     if (usersToDelete.size > 0) {
-        knex('discord_members')
+        await knex('discord_members')
             .delete()
             .whereIn('discord_user_id', Array.from(usersToDelete));
     }

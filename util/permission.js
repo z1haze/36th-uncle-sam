@@ -37,30 +37,35 @@ const setCommandsPermissions = async (commandManager) => {
             case 'echo':
             case 'edit':
                 await command.permissions.set({
-                    permissions: [...process.env.TOP_TIER_ROLE_IDS.split(',')
-                        .map((roleId) => {
-                            return {
-                                id        : roleId,
-                                type      : 'ROLE',
-                                permission: true
-                            };
-                        }), adminPermission]
+                    permissions: [
+                        ...process.env.TOP_TIER_ROLE_IDS.split(',')
+                            .map((roleId) => {
+                                return {
+                                    id        : roleId,
+                                    type      : 'ROLE',
+                                    permission: true
+                                };
+                            }), adminPermission
+                    ]
                 });
                 break;
             case 'updatenicks':
                 await command.permissions.set({
-                    permissions: [{
-                        id        : process.env.IT_SPECIALIST_ROLE_ID,
-                        type      : 'ROLE',
-                        permission: true
-                    },
-                    adminPermission]
+                    permissions: [
+                        {
+                            id        : process.env.IT_SPECIALIST_ROLE_ID,
+                            type      : 'ROLE',
+                            permission: true
+                        },
+                        adminPermission
+                    ]
                 });
                 break;
             case 'event':
                 await command.permissions.set({
                     permissions: [
                         adminPermission,
+
                         ...process.env.TOP_TIER_ROLE_IDS.split(',')
                             .map((roleId) => {
                                 return {
@@ -69,6 +74,7 @@ const setCommandsPermissions = async (commandManager) => {
                                     permission: true
                                 };
                             }),
+
                         ...process.env.COMPANY_LEADERSHIP_ROLE_IDS.split(',')
                             .map((roleId) => {
                                 return {
@@ -77,6 +83,7 @@ const setCommandsPermissions = async (commandManager) => {
                                     permission: true
                                 };
                             }),
+
                         ...process.env.PLATOON_LEADERSHIP_ROLE_IDS.split(',')
                             .map((roleId) => {
                                 return {
