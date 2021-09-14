@@ -204,6 +204,11 @@ module.exports = (interaction) => {
                         files  : [attachment]
                     };
                 }
+
+                default:
+                    return {
+                        content: 'Invalid game selection.'
+                    };
             }
         })
         .catch((e) => {
