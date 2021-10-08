@@ -28,8 +28,22 @@ const setCommandsPermissions = async (commandManager) => {
             case 'promote':
             case 'demote':
             case 'reaction':
-            case 'query':
                 await command.permissions.set({permissions: [officerCorePermission, adminPermission]});
+                break;
+
+            case 'query':
+                await command.permissions.set({permissions: [
+                    officerCorePermission,
+                    adminPermission,
+                    ...process.env.COMPANY_LEADERSHIP_ROLE_IDS.split(',')
+                        .map((roleId) => {
+                            return {
+                                id        : roleId,
+                                type      : 'ROLE',
+                                permission: true
+                            };
+                        })
+                ]});
                 break;
 
             case 'dm':
