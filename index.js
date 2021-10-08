@@ -29,7 +29,7 @@ client.on('ready', async () => {
     await guild.channels.fetch();
 
     // sync database
-    await require('./db/sync')(guild);
+    // await require('./db/sync')(guild);
 
     // setup commands
     await registerCommands(guild.commands);
