@@ -31,6 +31,9 @@ async function updateNickname (guildMember) {
         nickname = guildMember.nickname.match(/^(\d\/\d\s)?(\[(HHC|I\sCO)]\s)?([A-Z]Co\.\s)?(([A-z]|[1-2]){2,3}\.\s)?(.+)/).pop();
     }
 
+    console.log(nickname);
+    console.log(memberIsHHC);
+
     /**
      * Working from right to left, we add the nickname additions back in
      */
