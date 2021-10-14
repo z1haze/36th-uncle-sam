@@ -23,7 +23,7 @@ async function getDb () {
                     }
 
                     // eslint-disable-next-line no-console
-                    console.log('Event tables initialized');
+                    console.log('Event table initialized');
 
                     resolve(db);
                 });

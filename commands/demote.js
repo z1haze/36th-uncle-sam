@@ -41,7 +41,12 @@ module.exports = async (interaction) => {
 
     interaction.deferReply({ephemeral: true})
         .then(async () => {
-            const targetPreviousRankRole = getPreviousMemberRankRole(targetMember);
+            const targetPreviousRankRole = interaction.options.getRole('rank') || getPreviousMemberRankRole(targetMember);
+
+            if (targetPreviousRankRole.position > targetCurrentRankRole.position) {
+                return interaction.editReply('You cannot demote someone to a rank higher than their current rank!');
+            }
+
             const dmChannel = await interaction.user.createDM();
 
             await dmChannel.send(`Provide a reason for the demotion of ${targetMember}.`);

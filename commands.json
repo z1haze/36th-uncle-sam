@@ -177,6 +177,12 @@
           "name": "member",
           "description": "The member being promoted",
           "required": true
+        },
+        {
+          "type": "ROLE",
+          "name": "rank",
+          "description": "The rank the member is being promoted to",
+          "required": false
         }
       ]
     },
@@ -190,6 +196,12 @@
           "name": "member",
           "description": "The member being demoted",
           "required": true
+        },
+        {
+          "type": "ROLE",
+          "name": "rank",
+          "description": "The rank the member is being demoted to",
+          "required": false
         }
       ]
     },

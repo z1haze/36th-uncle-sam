@@ -62,8 +62,8 @@ module.exports = async (interaction) => {
                 });
             });
     }
-
-    const targetNextRankRole = getNextMemberRankRole(targetMember);
+    
+    const targetNextRankRole = interaction.options.getRole('rank') || getNextMemberRankRole(targetMember);
 
     // Ensure the member is promotable (has a next rank to move to)
     if (!targetNextRankRole) {
@@ -84,6 +84,11 @@ module.exports = async (interaction) => {
     interaction.deferReply({ephemeral: true})
         .then(async () => {
             const targetCurrentRankRole = getMemberRankRole(targetMember);
+
+            if (targetNextRankRole.position < targetCurrentRankRole.position) {
+                return interaction.editReply('You cannot promote someone to a rank lower than their current rank!');
+            }
+
             const dmChannel = await interaction.user.createDM();
             const instructionText = `Provide a reason for the promotion of ${targetMember}. Your verbiage should flow in the context of "because of [reason] and as such, has been promoted".`;
             await dmChannel.send(instructionText);
