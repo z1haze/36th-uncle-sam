@@ -1,6 +1,14 @@
 const {Collection} = require('discord.js');
 
 module.exports = {
+    /**
+     * Fetch messages from a channel
+     *
+     * @param channel
+     * @param limit
+     * @param opts
+     * @returns {Promise<Collection<Snowflake, Message>>}
+     */
     getMessages: async (channel, {limit = 100, ...opts}) => {
         let messages = new Collection();
         let lastId; // the id of the last message returned from the current iteration

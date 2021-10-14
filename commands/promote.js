@@ -73,6 +73,13 @@ module.exports = async (interaction) => {
         });
     }
 
+    if (process.env.RANK_ROLE_IDS.indexOf(targetNextRankRole.id) === -1) {
+        return interaction.reply({
+            content  : 'The role you selected is not a rank',
+            ephemeral: true
+        });
+    }
+
     // Ensure the command sender outranks the target member
     if (senderRankRole.position < targetNextRankRole.position) {
         return interaction.reply({

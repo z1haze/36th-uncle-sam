@@ -1,10 +1,23 @@
 const {getMessages} = require('../util/message');
 const {getTimePast} = require('../util/date');
 
+/**
+ * Clear messages from the current channel
+ *
+ * @param interaction
+ * @returns {Promise<*>}
+ */
 module.exports = async (interaction) => {
     const timeframe = interaction.options.get('timeframe');
     const limit = interaction.options.get('limit');
     const user = interaction.options.get('user');
+
+    if (!timeframe && !limit) {
+        return interaction.reply({
+            ephemeral: true,
+            content  : 'Either timeframe or limit must be used!'
+        });
+    }
 
     const opts = {};
 
@@ -20,6 +33,7 @@ module.exports = async (interaction) => {
 
     let messages = await getMessages(interaction.channel, opts);
 
+    // optionally filter the messages
     if (user) {
         messages = messages.filter((message) => message.author.id === user.value);
     }

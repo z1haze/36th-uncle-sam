@@ -43,6 +43,13 @@ module.exports = async (interaction) => {
         .then(async () => {
             const targetPreviousRankRole = interaction.options.getRole('rank') || getPreviousMemberRankRole(targetMember);
 
+            if (process.env.RANK_ROLE_IDS.indexOf(targetPreviousRankRole.id) === -1) {
+                return interaction.reply({
+                    content  : 'The role you selected is not a rank',
+                    ephemeral: true
+                });
+            }
+
             if (targetPreviousRankRole.position > targetCurrentRankRole.position) {
                 return interaction.editReply('You cannot demote someone to a rank higher than their current rank!');
             }
