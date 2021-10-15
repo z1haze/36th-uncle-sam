@@ -35,6 +35,7 @@ module.exports = (interaction) => {
                 }
             }
 
+            // the javascript window that exists when the page first loads
             const state = dom.window.__INITIAL_STATE__;
 
             switch (game) {
@@ -61,128 +62,91 @@ module.exports = (interaction) => {
                     });
 
                     // extract the data that we need
-                    const stats = {
-                        'bfv/stats': state['bfv/stats']
-                    };
+                    const stats = state.stats;
 
                     // do the hackery
                     await page.evaluate((stats, game, username, platform) => new Promise((resolve) => {
-                        const x = stats['bfv/stats'].customPlayers[`${game}|${platform}|${username}`];
-                        const s = x.stats;
-                        const c = x.classes;
-                        const a = x.account;
+                        const x = stats.standardProfiles[`${game}|${platform}|${username}`];
+                        const s = x.segments.find((segment) => segment.type === 'overview').stats;
+                        const c = x.segments.filter((segment) => segment.type === 'class');
+                        const a = x.platformInfo;
 
                         const promises = [];
 
                         // kills
-                        document.getElementById('kills').innerText = s.kills.displayValue;
-                        document.getElementById('kills-percentile').innerText = s.kills.displayPercentile;
+                        document.getElementById('kills').innerText = s.kills.metadata.displayValue;
+                        document.getElementById('kills-percentile').innerText = `Top ${100 - s.kills.percentile}%`;
 
                         // deaths
-                        document.getElementById('deaths').innerText = s.deaths.displayValue;
-                        document.getElementById('deaths-percentile').innerText = s.deaths.displayPercentile;
+                        document.getElementById('deaths').innerText = s.deaths.metadata.displayValue;
+                        document.getElementById('deaths-percentile').innerText = `Top ${100 - s.deaths.percentile}%`;
 
                         // accuracy
-                        document.getElementById('accuracy').innerText = s.shotsAccuracy.displayValue;
-                        document.getElementById('accuracy-percentile').innerText = s.shotsAccuracy.displayPercentile;
+                        document.getElementById('accuracy').innerText = s.shotsAccuracy.metadata.displayValue;
+                        document.getElementById('accuracy-percentile').innerText = `Top ${100 - s.shotsAccuracy.percentile}%`;
 
                         // kill streak
-                        document.getElementById('kill-streak').innerText = s.killStreak.displayValue;
-                        document.getElementById('kill-streak-percentile').innerText = s.killStreak.displayPercentile;
+                        document.getElementById('kill-streak').innerText = s.killStreak.metadata.displayValue;
+                        document.getElementById('kill-streak-percentile').innerText = `Top ${100 - s.killStreak.percentile}%`;
 
                         // top class
-                        const topClass = c.sort((c1, c2) => c2.score.value - c1.score.value)[0];
-                        document.getElementById('top-class').innerText = topClass.class;
+                        const topClass = c.sort((c1, c2) => c2.stats.score.value - c1.stats.score.value)[0];
+                        document.getElementById('top-class').innerText = topClass.metadata.name;
 
                         // top class image
                         promises.push(new Promise((resolve) => {
                             const image = new Image();
                             image.onload = resolve;
                             image.onerror = resolve;
-                            image.src = `img/${topClass.class}.png`;
+                            image.src = encodeURI(topClass.metadata.imageUrl);
 
                             document.getElementById('top-class-img').setAttribute('src', image.src);
                         }));
 
                         // gamer tag
-                        document.getElementById('name').innerText = a.playerName;
+                        document.getElementById('name').innerText = a.platformUserHandle;
 
                         // time played
                         document.getElementById('time-played').innerText = s.timePlayed.displayValue;
 
                         // score per minute
                         document.getElementById('score-min').innerText = s.scorePerMinute.displayValue;
-                        document.getElementById('score-min-percentile').innerText = s.scorePerMinute.displayPercentile;
+                        document.getElementById('score-min-percentile').innerText = `Top ${100 - s.scorePerMinute.percentile}%`;
 
                         // k/d
                         document.getElementById('kd').innerText = s.kdRatio.displayValue;
-                        document.getElementById('kd-percentile').innerText = s.kdRatio.displayPercentile;
+                        document.getElementById('kd-percentile').innerText = `Top ${100 - s.kdRatio.percentile}%`;
 
                         // win %
                         document.getElementById('win').innerText = s.wlPercentage.displayValue;
-                        document.getElementById('win-percentile').innerText = s.wlPercentage.displayPercentile;
+                        document.getElementById('win-percentile').innerText = `Top ${100 - s.wlPercentage.percentile}%`;
 
                         // level
                         document.getElementById('level').innerText = s.rank.displayValue;
-                        document.getElementById('rank').innerText = getRank(s.rank.value);
+                        document.getElementById('rank').innerText = s.rank.metadata.label;
 
                         // avatar
                         promises.push(new Promise((resolve) => {
                             const image = new Image();
                             image.onload = resolve;
                             image.onerror = resolve;
-                            image.src = a.avatarUrl;
+                            image.src = encodeURI(a.avatarUrl);
 
                             document.getElementById('avatar').style.backgroundImage = `url('${image.src}')`;
                         }));
 
+                        //rank
+                        promises.push(new Promise((resolve) => {
+                            const image = new Image();
+                            image.onload = resolve;
+                            image.onerror = resolve;
+                            image.src = encodeURI(s.rank.metadata.imageUrl);
+
+                            document.getElementById('rank-img').style.backgroundImage = `url('${image.src}')`;
+                        }));
+
                         return Promise.all(promises)
                             .then(() => resolve(undefined));
-
-                        function getRank (level) {
-                            if (level <= 10) {
-                                return 'Private';
-                            }
-
-                            if (level <= 19) {
-                                return 'Private First Class';
-                            }
-
-                            if (level <= 29) {
-                                return 'Lance Corporal';
-                            }
-
-                            if (level <= 39) {
-                                return 'Corporal';
-                            }
-
-                            if (level <= 49) {
-                                return 'Sergeant';
-                            }
-
-                            if (level <= 99) {
-                                return 'Sergeant First Class';
-                            }
-
-                            if (level <= 149) {
-                                return 'Sergeant Major';
-                            }
-
-                            if (level <= 199) {
-                                return 'Second Lieutenant';
-                            }
-
-                            if (level <= 249) {
-                                return 'First Lieutenant';
-                            }
-
-                            if (level <= 299) {
-                                return 'Captain';
-                            }
-
-                            return 'Take a Breather';
-                        }
-
                     }), stats, game, player, platform);
 
                     const id = uuidv4();
