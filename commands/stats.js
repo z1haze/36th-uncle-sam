@@ -75,19 +75,19 @@ module.exports = (interaction) => {
 
                         // kills
                         document.getElementById('kills').innerText = s.kills.displayValue;
-                        document.getElementById('kills-percentile').innerText = `Top ${100 - s.kills.percentile}%`;
+                        document.getElementById('kills-percentile').innerText = `Top ${(100 - s.kills.percentile).toFixed(0)}%`;
 
                         // deaths
                         document.getElementById('deaths').innerText = s.deaths.displayValue;
-                        document.getElementById('deaths-percentile').innerText = `Top ${100 - s.deaths.percentile}%`;
+                        document.getElementById('deaths-percentile').innerText = `Top ${(100 - s.deaths.percentile).toFixed(0)}%`;
 
                         // accuracy
                         document.getElementById('accuracy').innerText = s.shotsAccuracy.displayValue;
-                        document.getElementById('accuracy-percentile').innerText = `Top ${100 - s.shotsAccuracy.percentile}%`;
+                        document.getElementById('accuracy-percentile').innerText = `Top ${(100 - s.shotsAccuracy.percentile).toFixed(0)}%`;
 
                         // kill streak
                         document.getElementById('kill-streak').innerText = s.killStreak.displayValue;
-                        document.getElementById('kill-streak-percentile').innerText = `Top ${100 - s.killStreak.percentile}%`;
+                        document.getElementById('kill-streak-percentile').innerText = `Top ${(100 - s.killStreak.percentile).toFixed(0)}%`;
 
                         // top class
                         const topClass = c.sort((c1, c2) => c2.stats.score.value - c1.stats.score.value)[0];
@@ -111,15 +111,15 @@ module.exports = (interaction) => {
 
                         // score per minute
                         document.getElementById('score-min').innerText = s.scorePerMinute.displayValue;
-                        document.getElementById('score-min-percentile').innerText = `Top ${100 - s.scorePerMinute.percentile}%`;
+                        document.getElementById('score-min-percentile').innerText = `Top ${(100 - s.scorePerMinute.percentile).toFixed(0)}%`;
 
                         // k/d
                         document.getElementById('kd').innerText = s.kdRatio.displayValue;
-                        document.getElementById('kd-percentile').innerText = `Top ${100 - s.kdRatio.percentile}%`;
+                        document.getElementById('kd-percentile').innerText = `Top ${(100 - s.kdRatio.percentile).toFixed(0)}%`;
 
                         // win %
                         document.getElementById('win').innerText = s.wlPercentage.displayValue;
-                        document.getElementById('win-percentile').innerText = `Top ${100 - s.wlPercentage.percentile}%`;
+                        document.getElementById('win-percentile').innerText = `Top ${(100 - s.wlPercentage.percentile).toFixed(0)}%`;
 
                         // level
                         document.getElementById('level').innerText = s.rank.displayValue;
