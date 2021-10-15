@@ -74,19 +74,19 @@ module.exports = (interaction) => {
                         const promises = [];
 
                         // kills
-                        document.getElementById('kills').innerText = s.kills.metadata.displayValue;
+                        document.getElementById('kills').innerText = s.kills.displayValue;
                         document.getElementById('kills-percentile').innerText = `Top ${100 - s.kills.percentile}%`;
 
                         // deaths
-                        document.getElementById('deaths').innerText = s.deaths.metadata.displayValue;
+                        document.getElementById('deaths').innerText = s.deaths.displayValue;
                         document.getElementById('deaths-percentile').innerText = `Top ${100 - s.deaths.percentile}%`;
 
                         // accuracy
-                        document.getElementById('accuracy').innerText = s.shotsAccuracy.metadata.displayValue;
+                        document.getElementById('accuracy').innerText = s.shotsAccuracy.displayValue;
                         document.getElementById('accuracy-percentile').innerText = `Top ${100 - s.shotsAccuracy.percentile}%`;
 
                         // kill streak
-                        document.getElementById('kill-streak').innerText = s.killStreak.metadata.displayValue;
+                        document.getElementById('kill-streak').innerText = s.killStreak.displayValue;
                         document.getElementById('kill-streak-percentile').innerText = `Top ${100 - s.killStreak.percentile}%`;
 
                         // top class
