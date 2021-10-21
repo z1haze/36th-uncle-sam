@@ -71,14 +71,6 @@ const setCommandsPermissions = async (commandManager) => {
                     ]
                 });
                 break;
-            case 'event':
-                await command.permissions.set({
-                    permissions: [
-                        adminPermission,
-                        officerCorePermission
-                    ]
-                });
-                break;
         }
     });
 };

@@ -15,6 +15,9 @@ What It Does
 - [x] Clear chat messages
 - [x] Render player stats for bfv
 - [x] Promote members
+- [x] Demote members
+- [x] Transfer members to different company/squad/etc
+- [x] Add bot reactions to messages
 
 Usage Overview
 ---
@@ -34,4 +37,3 @@ Usage Overview
 * [`/query`](docs/commands/query.md) - Query members to get analytical data about them
 * [`/nickname`](docs/commands/nickname.md) - Update the gamertag/nickname for a member
 * [`/transfer`](docs/commands/transfer.md) - Facilitate a transfer of a unit member to a different unit
-* [`/event`](docs/commands/event.md) - Create and manage scheduled events
