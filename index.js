@@ -3,7 +3,6 @@ require('./util/sentry').init();
 
 const {Client} = require('discord.js');
 const {registerCommands} = require('./util/command');
-const {watchEvents} = require('./util/event');
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const GUILD_ID = process.env.GUILD_ID;
@@ -28,14 +27,8 @@ client.on('ready', async () => {
     await guild.roles.fetch();
     await guild.channels.fetch();
 
-    // sync database
-    // await require('./db/sync')(guild);
-
     // setup commands
     await registerCommands(guild.commands);
-
-    // watch events
-    watchEvents(guild);
 });
 
 client.login(BOT_TOKEN);

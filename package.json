@@ -17,10 +17,7 @@
     "discord.js": "^13.1.0",
     "dotenv": "^8.6.0",
     "jsdom": "^16.7.0",
-    "knex": "^0.95.11",
-    "pg": "^8.7.1",
     "puppeteer": "^5.5.0",
-    "sqlite3": "^5.0.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
