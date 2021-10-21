@@ -38,8 +38,6 @@ module.exports = {
                         return require('../commands/nickname')(interaction);
                     case 'updatenicks':
                         return require('../commands/updatenicks')(interaction);
-                    case 'event':
-                        return require('../commands/event')(interaction);
                 }
             }
         });

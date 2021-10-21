@@ -51,20 +51,6 @@ function parseTime (input, past = false, date) {
 }
 
 /**
- * Get a time in the future using a string based duration format
- *
- * @param input
- * @param fromDate
- */
-function getTimeFuture (input, fromDate = null) {
-    if (!input.length) {
-        throw new Error('Input string cannot be empty');
-    }
-
-    return parseTime(input, false, fromDate);
-}
-
-/**
  * Get a time in the past using a string based duration format
  *
  * @param input
@@ -75,6 +61,5 @@ function getTimePast (input, fromDate = null) {
 }
 
 module.exports = {
-    getTimePast,
-    getTimeFuture
+    getTimePast
 };
