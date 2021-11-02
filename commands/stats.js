@@ -28,7 +28,7 @@ module.exports = (interaction) => {
             try {
                 dom = await JSDOM.fromURL(statsUrl, {runScripts: 'dangerously'});
             } catch (e) {
-                if (e.response.statusCode === 404) {
+                if (e.message.includes('404')) {
                     return interaction.editReply(`Player "${player}" found. Check your spelling and try again.`);
                 } else {
                     return interaction.editReply('Stats bot broke, tell wiggls!');
@@ -176,6 +176,7 @@ module.exports = (interaction) => {
             }
         })
         .catch((e) => {
+            throw e;
             return {
                 content: `An uncaught error occurred: ${e.message}`
             };
