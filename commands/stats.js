@@ -29,9 +29,9 @@ module.exports = (interaction) => {
                 dom = await JSDOM.fromURL(statsUrl, {runScripts: 'dangerously'});
             } catch (e) {
                 if (e.message.includes('404')) {
-                    return interaction.editReply(`Player "${player}" found. Check your spelling and try again.`);
+                    return `Player "${player}" found. Check your spelling and try again.`
                 } else {
-                    return interaction.editReply('Stats bot broke, tell wiggls!');
+                    return 'Stats bot broke, tell wiggls!';
                 }
             }
 
@@ -170,16 +170,11 @@ module.exports = (interaction) => {
                 }
 
                 default:
-                    return {
-                        content: 'Invalid game selection.'
-                    };
+                    return 'Invalid game selection.';
             }
         })
         .catch((e) => {
-            throw e;
-            return {
-                content: `An uncaught error occurred: ${e.message}`
-            };
+            return `An uncaught error occurred: ${e.message}`;
         })
         .then((opts) => {
             return interaction.editReply(opts);
