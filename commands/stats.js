@@ -1,6 +1,5 @@
 /* global window, document, Image */
 
-const {JSDOM} = require('jsdom');
 const puppeteer = require('puppeteer');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
@@ -19,31 +18,33 @@ module.exports = (interaction) => {
     const game = interaction.options.get('game').value;
     const platform = interaction.options.get('platform').value;
     const player = interaction.options.get('gamertag').value.toLowerCase();
-    const statsUrl = `https://battlefieldtracker.com/${game}/profile/${platform}/${player}/overview`;
 
     return interaction.deferReply()
         .then(async () => {
-            let dom;
-
-            try {
-                dom = await JSDOM.fromURL(statsUrl, {runScripts: 'dangerously'});
-            } catch (e) {
-                if (e.message.includes('404')) {
-                    return `Player "${player}" found. Check your spelling and try again.`
-                } else {
-                    return 'Stats bot broke, tell wiggls!';
-                }
-            }
-
-            // the javascript window that exists when the page first loads
-            const state = dom.window.__INITIAL_STATE__;
-
             switch (game) {
                 case 'bfv': {
                     const browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
                     const page = await browser.newPage();
 
-                    await page.goto('http://stats.thefighting36th.com/');
+                    // establish a session to we can query the api
+                    const profileUrl = `https://battlefieldtracker.com/${game}/profile/${platform}/${player}/overview`;
+                    await page.goto(profileUrl);
+
+                    // query the api
+                    const statsUrl = `https://api.tracker.gg/api/v2/${game}/standard/profile/${platform}/${player}`;
+                    const response = await page.goto(statsUrl);
+                    await page.content();
+
+                    if (response.status() === 404) {
+                        return `Player "${player}" found. Check your spelling and try again.`;
+                    } else if (response.status() !== 200) {
+                        return 'Stats bot broke, tell wiggls!';
+                    }
+
+                    const state = await page.evaluate(() => JSON.parse(document.body.innerText));
+
+                    await page.goto('http://stats.thefighting36th.com/', {waitUntil : 'networkidle0'});
+                    await page.content();
 
                     // get size of div for screenshot
                     const dimensions = await page.evaluate(() => {
@@ -62,14 +63,13 @@ module.exports = (interaction) => {
                     });
 
                     // extract the data that we need
-                    const stats = state.stats;
+                    const stats = state.data;
 
                     // do the hackery
                     await page.evaluate((stats, game, username, platform) => new Promise((resolve) => {
-                        const x = stats.standardProfiles[`${game}|${platform}|${username}`];
-                        const s = x.segments.find((segment) => segment.type === 'overview').stats;
-                        const c = x.segments.filter((segment) => segment.type === 'class');
-                        const a = x.platformInfo;
+                        const s = stats.segments.find((segment) => segment.type === 'overview').stats;
+                        const c = stats.segments.filter((segment) => segment.type === 'class');
+                        const a = stats.platformInfo;
 
                         const promises = [];
 
