@@ -36,7 +36,7 @@ module.exports = (interaction) => {
                     await page.content();
 
                     if (response.status() === 404) {
-                        return `Player "${player}" found. Check your spelling and try again.`;
+                        return `Player "${player}" not found. Check your spelling and try again.`;
                     } else if (response.status() !== 200) {
                         return 'Stats bot broke, tell wiggls!';
                     }
