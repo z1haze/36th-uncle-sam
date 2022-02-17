@@ -159,7 +159,7 @@ module.exports = (interaction) => {
                     const image = fs.readFileSync(filePath);
                     const attachment = new MessageAttachment(image);
 
-                    const encodedUrl = encodeURI(`${statsUrl}?ref=discord`);
+                    const encodedUrl = encodeURI(`${profileUrl}?ref=discord`);
 
                     fs.unlinkSync(filePath);
 
