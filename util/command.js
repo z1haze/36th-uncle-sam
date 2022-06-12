@@ -1,11 +1,9 @@
 const commandData = require('../commands.json');
-const {setCommandsPermissions} = require('./permission');
 
 module.exports = {
     registerCommands: async (commandManager) => {
         await commandManager.fetch();
         await commandManager.set(commandData.commands);
-        await setCommandsPermissions(commandManager);
 
         commandManager.client.on('interactionCreate', async (interaction) => {
             if (interaction.isCommand()) {
