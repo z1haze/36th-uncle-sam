@@ -92,6 +92,10 @@ module.exports = async (interaction) => {
         .then(async () => {
             const targetCurrentRankRole = getMemberRankRole(targetMember);
 
+            if (!targetCurrentRankRole) {
+                return interaction.editReply('You are trying to promote a user who does not have the necessary roles to be promoted. Check that this user has either a current rank, or if the user is new, they have the processing role.');
+            }
+
             if (targetNextRankRole.position < targetCurrentRankRole.position) {
                 return interaction.editReply('You cannot promote someone to a rank lower than their current rank!');
             }
