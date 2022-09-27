@@ -257,43 +257,6 @@
       ]
     },
     {
-      "name": "stats",
-      "description": "Process various analytical queries",
-      "defaultPermission": true,
-      "options": [
-        {
-          "type": "STRING",
-          "name": "game",
-          "description": "Which game to specify stats for",
-          "required": true,
-          "choices": [
-            {
-              "name": "BFV",
-              "value": "bfv"
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "name": "platform",
-          "description": "Which platform to fetch stats from",
-          "required": true,
-          "choices": [
-            {
-              "name": "XBL",
-              "value": "xbl"
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "name": "gamertag",
-          "description": "The player's GamerTag",
-          "required": true
-        }
-      ]
-    },
-    {
       "name": "updatenicks",
       "description": "Update nicknames for everyone on the server YOLO",
       "defaultPermission": false,
